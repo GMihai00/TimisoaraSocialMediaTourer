@@ -19,6 +19,7 @@ public class MainFrame extends JFrame {
         this.setSize(new Dimension(MainFrame.screenSize.width / 2, MainFrame.screenSize.height / 2));
         this.setLocationRelativeTo(null);
         this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        this.setLocationRelativeTo(null);
         this.setVisible(true);
         
 

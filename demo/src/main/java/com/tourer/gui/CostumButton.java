@@ -12,9 +12,11 @@ public class CostumButton extends JButton{
     int h;
     ImageIcon icon;
     ImageIcon selectIcon;
+    String iconPath;
     public  CostumButton(int w, int h, String iconPath) {
         this.w = w;
         this.h = h;
+        this.iconPath = iconPath;
         icon = new ImageIcon(new ImageIcon(iconPath).getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH));
         selectIcon = new ImageIcon(new ImageIcon(iconPath).getImage().getScaledInstance(w + 20, h + 20, Image.SCALE_SMOOTH));
         this.setIcon(icon);
@@ -34,7 +36,7 @@ public class CostumButton extends JButton{
         });
     }
 
-    public void updateIcon(int w, int h, String iconPath){
+    public void updateIcon(int w, int h){
         ImageIcon icon = new ImageIcon(new ImageIcon(iconPath).getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH));
         this.setIcon(icon);
     }

@@ -39,13 +39,11 @@ import javafx.application.Application;
 
 public class App extends Application
 {
-    
-    public static void initAndShowGUI(){
-        GradientColor gradientColor = new GradientColor(new Color(100, 232, 222), new Color(138, 84, 235));
+    static GradientColor gradientColor = new GradientColor(new Color(100, 232, 222), new Color(138, 84, 235));
         
-
-        MainFrame mainFrame = new MainFrame(gradientColor);
-       
+    static MainFrame mainFrame = new MainFrame(gradientColor);
+    public static ButtonBox buttonBox;
+    public static void initAndShowGUI(){
         ColorPanel menu = new ColorPanel();
 
         ColorPanel searchPanel = new ColorPanel();
@@ -59,7 +57,7 @@ public class App extends Application
         userSearchField.addItem("Andreea");
         searchPanel.add(userSearchField);
 
-        ButtonBox buttonBox = new ButtonBox(locationSearchField, userSearchField);
+        buttonBox = new ButtonBox(locationSearchField, userSearchField);
         
         JFXPanel fxpanel = new JFXPanel();
         menu.add(buttonBox);

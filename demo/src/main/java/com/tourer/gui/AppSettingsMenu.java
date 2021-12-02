@@ -108,7 +108,8 @@ public class AppSettingsMenu extends SettingsMenu{
         languagePanel.setBorder(BorderFactory.createTitledBorder(border, "Language", TitledBorder.LEADING, TitledBorder.BELOW_TOP, new Font(fontStyle, fontType, textSize), PURPLE_COLOR));
         languagePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        SearchField languageField = new SearchField();
+        LanguagePicker languageField = new LanguagePicker();
+        
         languageField.setVisible(true);
         languageField.search.setBackground(PURPLE_COLOR);
         languageField.search.setForeground(Color.orange);
@@ -124,4 +125,6 @@ public class AppSettingsMenu extends SettingsMenu{
         this.update();
     }
     
+
+   
 }

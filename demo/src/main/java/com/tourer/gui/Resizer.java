@@ -8,7 +8,7 @@ import java.awt.Font;
 public class Resizer extends JSlider{
     
     public Resizer(){
-        super(25, 175, 100);
+        super(50, 150, 100);
         this.setPaintTicks(true);
         this.setMinorTickSpacing(5);
         this.setMajorTickSpacing(25);
