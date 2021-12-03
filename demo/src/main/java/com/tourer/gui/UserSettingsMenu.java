@@ -8,7 +8,6 @@ public class UserSettingsMenu extends SettingsMenu{
     public UserSettingsMenu(){
 
         ColorPanel colorPanel = new ColorPanel();
-        
 
         Container contentPane = this.getContentPane();
      

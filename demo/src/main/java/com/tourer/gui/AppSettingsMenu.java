@@ -1,16 +1,20 @@
 package com.tourer.gui;
 
 
-
+import java.awt.CardLayout;
 import java.awt.Font;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
@@ -28,60 +32,47 @@ public class AppSettingsMenu extends SettingsMenu{
     final static String[] languages = new String[]{"English", "Romana"}; 
     public AppSettingsMenu() {
         
-        // GradientColor gradientColor = new GradientColor(Color.MAGENTA, Color.red);
-        ColorPanel colorPanel = new ColorPanel();
-        colorPanel.setPreferredSize(new Dimension(MainFrame.screenSize.width * 4 / 5, MainFrame.screenSize.height));
-        colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.PAGE_AXIS));
-        colorPanel.setBorder(BorderFactory.createTitledBorder(border, "Settings", TitledBorder.LEADING, TitledBorder.BELOW_TOP, new Font(fontStyle, fontType, textSize), PURPLE_COLOR));
-        colorPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+       
+
+        ColorPanel windowPanel = new ColorPanel();
+        windowPanel.setPreferredSize(new Dimension(MainFrame.screenSize.width * 4 / 5, MainFrame.screenSize.height));
+        windowPanel.setLayout(new BoxLayout(windowPanel, BoxLayout.PAGE_AXIS));
+        windowPanel.setBorder(BorderFactory.createTitledBorder(border, "Settings", TitledBorder.LEADING, TitledBorder.BELOW_TOP, new Font(fontStyle, fontType, textSize), PURPLE_COLOR));
+        windowPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         
         ColorPanel fieldsGridPanel = new ColorPanel();
         fieldsGridPanel.setPreferredSize(new Dimension(MainFrame.screenSize.width / 5 - 100, MainFrame.screenSize.height));
         
-        ButtonSettings gridPanelWindow = new ButtonSettings(Color.red, Color.yellow);
+        ButtonSettings gridPanelWindow = new ButtonSettings(Color.red, Color.yellow, "Window");
         gridPanelWindow.setAlignmentX(Component.RIGHT_ALIGNMENT);
         gridPanelWindow.setPreferredSize(new Dimension((int) fieldsGridPanel.getPreferredSize().getWidth(), buttonHeight));
         gridPanelWindow.setBorder(border);
-        JLabel labeWindow = new JLabel("Window");
-        labeWindow.setFont(new Font(fontStyle, fontType, textSize));
-        gridPanelWindow.addLeft(labeWindow);
         fieldsGridPanel.add(gridPanelWindow);
         
         
        
         
-        ButtonSettings gridPanelSecurity = new ButtonSettings(Color.red, Color.yellow);
+        ButtonSettings gridPanelSecurity = new ButtonSettings(Color.red, Color.yellow, "Security");
         gridPanelSecurity.setAlignmentX(Component.RIGHT_ALIGNMENT);
         gridPanelSecurity.setPreferredSize(new Dimension((int) fieldsGridPanel.getPreferredSize().getWidth(), buttonHeight));
         gridPanelSecurity.setBorder(border);
-        JLabel labelSecurity = new JLabel("Security");
-        labelSecurity.setFont(new Font(fontStyle, fontType, textSize));
-        gridPanelSecurity.addLeft(labelSecurity);
         fieldsGridPanel.add(gridPanelSecurity);
 
-        ButtonSettings gridPanelText = new ButtonSettings(Color.red, Color.yellow);
-        gridPanelText.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        gridPanelText.setPreferredSize(new Dimension((int) fieldsGridPanel.getPreferredSize().getWidth(), buttonHeight));
-        gridPanelText.setBorder(border);
-        JLabel labelText = new JLabel("Text");
-        labelText.setFont(new Font(fontStyle, fontType, textSize));
-        gridPanelText.addLeft(labelText);
-
-        fieldsGridPanel.add(gridPanelText);
+        
         this.add(fieldsGridPanel, BorderLayout.WEST);
         
         CheckBox darkMode = new CheckBox("Dark Mode");
         darkMode.setForeground(PURPLE_COLOR);
-        colorPanel.add(darkMode);
+        windowPanel.add(darkMode);
         CheckBox notifications = new CheckBox("Notifications");
         notifications.setForeground(PURPLE_COLOR);
         notifications.setSelected(true);
-        colorPanel.add(notifications);
+        windowPanel.add(notifications);
 
         GridPanel gridPanel = new GridPanel();
         
-        gridPanel.setBorder(BorderFactory.createTitledBorder(border, "Window", TitledBorder.LEADING, TitledBorder.BELOW_TOP, new Font(fontStyle, fontType, textSize), PURPLE_COLOR));
+        gridPanel.setBorder(BorderFactory.createTitledBorder(border, "Resizing", TitledBorder.LEADING, TitledBorder.BELOW_TOP, new Font(fontStyle, fontType, textSize), PURPLE_COLOR));
         gridPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel textResizerLabel = new JLabel("Text Size");
@@ -103,7 +94,7 @@ public class AppSettingsMenu extends SettingsMenu{
         IconResizer iconResizer = new IconResizer();
         gridPanel.addLeft(Box.createVerticalStrut(20));
         gridPanel.addRight(iconResizer);
-        colorPanel.add(gridPanel);
+        windowPanel.add(gridPanel);
         GridPanel languagePanel = new GridPanel();
         languagePanel.setBorder(BorderFactory.createTitledBorder(border, "Language", TitledBorder.LEADING, TitledBorder.BELOW_TOP, new Font(fontStyle, fontType, textSize), PURPLE_COLOR));
         languagePanel.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -120,8 +111,25 @@ public class AppSettingsMenu extends SettingsMenu{
         languageField.setSelectedItem("English");
         languagePanel.addLeft(languageField);
         languagePanel.addRight(Box.createVerticalStrut(20));
-        colorPanel.add(languagePanel);
-        this.add(colorPanel, BorderLayout.CENTER);
+        windowPanel.add(languagePanel);
+        
+
+        ColorPanel securityPanel = new ColorPanel();
+        securityPanel.setPreferredSize(new Dimension(MainFrame.screenSize.width * 4 / 5, MainFrame.screenSize.height));
+        securityPanel.setLayout(new BoxLayout(securityPanel, BoxLayout.PAGE_AXIS));
+        securityPanel.setBorder(BorderFactory.createTitledBorder(border, "Settings", TitledBorder.LEADING, TitledBorder.BELOW_TOP, new Font(fontStyle, fontType, textSize), PURPLE_COLOR));
+        securityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        ButtonSettings cardUpdateButton = new ButtonSettings(Color.red, Color.yellow, "Update card data", 1);
+        securityPanel.add(cardUpdateButton);
+
+        ButtonSettings.cardPanel.add(windowPanel, "Window");
+        ButtonSettings.cardPanel.add(securityPanel, "Security");
+        ButtonSettings.cardLayout.show(ButtonSettings.cardPanel, "Window");
+
+
+
+        this.add(ButtonSettings.cardPanel, BorderLayout.CENTER);
         this.update();
     }
     

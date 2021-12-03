@@ -30,7 +30,7 @@ public class LanguagePicker extends SearchField{
         englishToRomanian.put("Language", "Limba");
         englishToRomanian.put("Dark Mode", "Mod intunecat");
         englishToRomanian.put("Notifications", "Notificari");
-
+        englishToRomanian.put("Resizing", "Redimensionare");
         romanianToEnglish = new HashMap<String, String>();
         for(Map.Entry<String, String> entry : englishToRomanian.entrySet()){
             romanianToEnglish.put(entry.getValue(), entry.getKey());
