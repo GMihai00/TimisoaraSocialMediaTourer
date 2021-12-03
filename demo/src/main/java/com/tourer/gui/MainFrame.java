@@ -10,7 +10,7 @@ import javax.swing.border.LineBorder;
 
 
 public class MainFrame extends JFrame {
-    final static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+    public final static Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
     static GradientColor gradientColor;
     final static LineBorder nullBorder = new LineBorder(Color.black, 0, false);
     public MainFrame(GradientColor gradientColor) {

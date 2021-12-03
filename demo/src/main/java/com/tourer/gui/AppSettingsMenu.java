@@ -24,9 +24,9 @@ public class AppSettingsMenu extends SettingsMenu{
     public final static int buttonWidth  = 40;
     final static int w = 40;
     final static int h = 40;
-    final static int textSize = 25;
-    final static String fontStyle = Font.DIALOG;
-    final static int fontType =  Font.PLAIN;
+    public final static int textSize = 25;
+    public final static String fontStyle = Font.DIALOG;
+    public final static int fontType =  Font.PLAIN;
     final static LineBorder border = new LineBorder(Color.orange,1, true);
     final static Color PURPLE_COLOR = new Color(101, 24, 115);
     final static String[] languages = new String[]{"English", "Romana"}; 

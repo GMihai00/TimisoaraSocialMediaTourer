@@ -1,9 +1,12 @@
 package com.tourer;
 
 import java.awt.Desktop;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.BorderLayout;
 import java.awt.Color;
-
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -11,9 +14,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
 
+import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import com.tourer.gui.*;
 import com.tourer.gui.map.GoogleMaps;
@@ -37,11 +44,14 @@ import javafx.application.Application;
 
 //"vmArgs": "--module-path C:\\Java\\JavaFX\\javafx-sdk-17.0.1\\lib --add-modules javafx.controls,javafx.fxml",
 
-public class App extends Application
+public class App extends Application 
 {
     static GradientColor gradientColor = new GradientColor(new Color(100, 232, 222), new Color(138, 84, 235));
         
     static MainFrame mainFrame = new MainFrame(gradientColor);
+    static{
+        mainFrame.setVisible(false);
+    }
     public static ButtonBox buttonBox;
     public static void initAndShowGUI(){
         ColorPanel menu = new ColorPanel();
@@ -78,13 +88,45 @@ public class App extends Application
                     mainFrame.add(fxpanel, BorderLayout.CENTER);
                 }
         });
-       
+        
         mainFrame.update();     
     }
     
     public static void main( String[] args ) throws IOException{
         
-        launch(args);
+        JFrame loginFrame = new JFrame();
+        GridPanel contentPane = new GridPanel();
+        loginFrame.setSize(new Dimension((MainFrame.screenSize.width * 3) / 4 , (MainFrame.screenSize.height * 3) / 4));
+        loginFrame.setContentPane(contentPane);
+        JLabel label = new JLabel("UserName");
+        label.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
+        contentPane.addLeft(label);
+        contentPane.addRight(new JTextField());
+        contentPane.addSpacer(Box.createVerticalStrut(20));
+        JLabel label2 = new JLabel("Password");
+        label2.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
+        contentPane.addLeft(label2);
+        contentPane.addRight(new JTextField());
+        contentPane.addSpacer(Box.createVerticalStrut(20));
+        loginFrame.setLocationRelativeTo(null);
+
+        JButton loginButton = new JButton("Login");
+        loginButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loginFrame.setVisible(false);
+                mainFrame.setVisible(true);
+                
+            }
+
+        });
+        contentPane.addLeft(loginButton);
+        JLabel passwordReset = new JLabel("Forgot Password");
+        contentPane.addRight(passwordReset);
+
+        loginFrame.setVisible(true);
+        launch(App.class, args);
         // SwingUtilities.invokeLater(new Runnable() {
         //     @Override
         //     public void run() {
@@ -113,4 +155,6 @@ public class App extends Application
         });
         
     }
+
+   
 }
