@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
@@ -38,6 +39,7 @@ import javafx.application.Platform;
 import javax.swing.JTextPane;
 import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
@@ -52,10 +54,30 @@ public class App extends Application
 {
     static GradientColor gradientColor = new GradientColor(new Color(100, 232, 222), new Color(138, 84, 235));
     static String logoPath = "C:\\Java\\PI\\demo\\Icons\\Logo.jpg";
+    static String errorPath = "C:\\Java\\PI\\demo\\Icons\\Error.png";
+    static final ImageIcon errorIcon = new ImageIcon(new ImageIcon(errorPath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
     static MainFrame mainFrame = new MainFrame(gradientColor);
     static{
         mainFrame.setVisible(false);
+        UIManager.put("OptionPane.errorIcon", errorIcon);
+        UIManager.put("OptionPane.background", gradientColor.getSecondaryColor());
+        UIManager.put("Panel.background", gradientColor.getSecondaryColor());
+        UIManager.put("Button.background", Color.orange);
+        UIManager.put("Button.foreground", Color.white);
+        UIManager.put("OptionPane.messageForeground", Color.orange);
     }
+
+    public static boolean checkUserExistance(String username, String password){
+
+        
+        if(username.equals(""))
+            return false;
+       
+        if(password.equals(""))
+            return false;
+        return true;
+    }
+
     public static ButtonBox buttonBox;
     public static void initAndShowGUI(){
         ColorPanel menu = new ColorPanel();
@@ -166,10 +188,21 @@ public class App extends Application
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                loginFrame.setVisible(false);
-                mainFrame.setVisible(true);
-                mainFrame.update(); 
-                
+                String username = userNameTextField.getText();
+                String password = new String(passwordTextField.getPassword());
+
+                boolean ok = App.checkUserExistance(username, password);
+                if(ok == true){
+                    loginFrame.setVisible(false);
+                    mainFrame.setVisible(true);
+                    mainFrame.update(); 
+                }
+                else
+                {
+                    userNameTextField.setBorder(AccountCreationFrame.RED_BORDER);
+                    passwordTextField.setBorder(AccountCreationFrame.RED_BORDER);
+                    JOptionPane.showMessageDialog(loginFrame, "Wrong username or password", "ERROR", JOptionPane.ERROR_MESSAGE);
+                }
             }
 
         });
@@ -184,10 +217,9 @@ public class App extends Application
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                
-                accountCreationFrame.setVisible(true);
 
-                
+                    accountCreationFrame.setVisible(true);
+
             }
 
         });

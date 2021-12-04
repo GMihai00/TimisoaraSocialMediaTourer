@@ -14,6 +14,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
@@ -124,6 +125,7 @@ public class AccountCreationFrame extends JFrame{
                 {
                     usernameTextField.setBorder(RED_BORDER);
                     ok = false;
+                    JOptionPane.showMessageDialog(AccountCreationFrame.this, "Username must contain at least 6 characters", "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
                 else
                 {
@@ -137,6 +139,7 @@ public class AccountCreationFrame extends JFrame{
                 if(!passwordMatcher.find()){
                     passwordTextField.setBorder(RED_BORDER);
                     reenterpasswordTextField.setBorder(RED_BORDER);
+                    JOptionPane.showMessageDialog(AccountCreationFrame.this, "Password must contain minimum eight characters, at least one letter, one number and one special character", "ERROR", JOptionPane.ERROR_MESSAGE);
                     ok = false;
                 }
                 else
@@ -150,6 +153,7 @@ public class AccountCreationFrame extends JFrame{
                 if(reenterpassword.equals(password) == false){
                     passwordTextField.setBorder(RED_BORDER);
                     reenterpasswordTextField.setBorder(RED_BORDER);
+                    JOptionPane.showMessageDialog(AccountCreationFrame.this, "Password doesn't match", "ERROR", JOptionPane.ERROR_MESSAGE);
                     ok = false;
                 }
                 
@@ -159,6 +163,7 @@ public class AccountCreationFrame extends JFrame{
                 if(!mailMatcher.find()){
                     mailTextField.setBorder(RED_BORDER);
                     ok = false;
+                    JOptionPane.showMessageDialog(AccountCreationFrame.this, "Not a valid email address", "ERROR", JOptionPane.ERROR_MESSAGE);
                 }
                 else
                 {
