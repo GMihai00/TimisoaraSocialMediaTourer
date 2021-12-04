@@ -1,5 +1,6 @@
 package com.tourer;
 
+import java.awt.Image;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -15,6 +16,7 @@ import java.net.URL;
 import java.sql.SQLException;
 
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
@@ -33,6 +35,7 @@ import java.util.*;
 
 import javafx.application.Platform;
 import javax.swing.JTextPane;
+import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
 
 import javafx.embed.swing.JFXPanel;
@@ -47,7 +50,7 @@ import javafx.application.Application;
 public class App extends Application 
 {
     static GradientColor gradientColor = new GradientColor(new Color(100, 232, 222), new Color(138, 84, 235));
-        
+    static String logoPath = "C:\\Java\\PI\\demo\\Icons\\Logo.jpg";
     static MainFrame mainFrame = new MainFrame(gradientColor);
     static{
         mainFrame.setVisible(false);
@@ -88,61 +91,123 @@ public class App extends Application
                     mainFrame.add(fxpanel, BorderLayout.CENTER);
                 }
         });
-        
-        mainFrame.update();     
+
     }
     
     public static void main( String[] args ) throws IOException{
         
+        try{
+            JdbcRunner.buildJdbc();
+            System.out.println("Successfully conected to server");
+        }catch(SQLException e1){
+            e1.printStackTrace();
+            System.exit(1);
+        }
+        
         JFrame loginFrame = new JFrame();
-        GridPanel contentPane = new GridPanel();
+        loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        SpringLayout springLayout = new SpringLayout();
+        ColorPanel contentPane = new ColorPanel();
+
+        contentPane.setLayout(springLayout);
         loginFrame.setSize(new Dimension((MainFrame.screenSize.width * 3) / 4 , (MainFrame.screenSize.height * 3) / 4));
         loginFrame.setContentPane(contentPane);
+
+        
         JLabel label = new JLabel("UserName");
+        label.setForeground(Color.ORANGE);
+        label.setFont(new Font(Font.DIALOG, Font.BOLD, 50));
+        JTextField userNameTextField = new JTextField();
+        
         label.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
-        contentPane.addLeft(label);
-        contentPane.addRight(new JTextField());
-        contentPane.addSpacer(Box.createVerticalStrut(20));
+        contentPane.add(label);
+        contentPane.add(userNameTextField);
+        ImageIcon logo = new ImageIcon(new ImageIcon(logoPath).getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH));
+        JLabel logoLabel = new JLabel();
+        logoLabel.setIcon(logo);
+        JLabel titleLabel = new JLabel("Timisoara Tourer");
+        titleLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 100));
+        titleLabel.setForeground(Color.ORANGE);
+        contentPane.add(titleLabel);
+        contentPane.add(logoLabel);
+        springLayout.putConstraint(SpringLayout.NORTH, titleLabel, 40, SpringLayout.NORTH, contentPane);
+        springLayout.putConstraint(SpringLayout.WEST, titleLabel, 50, SpringLayout.WEST, contentPane);
+        springLayout.putConstraint(SpringLayout.NORTH, logoLabel, 10, SpringLayout.NORTH, contentPane);
+        springLayout.putConstraint(SpringLayout.EAST, logoLabel, -10, SpringLayout.EAST, contentPane);
+
+        springLayout.putConstraint(SpringLayout.NORTH, label, 250, SpringLayout.NORTH, contentPane);
+        springLayout.putConstraint(SpringLayout.WEST, label, 200, SpringLayout.WEST, contentPane);
+        
+        springLayout.putConstraint(SpringLayout.WEST, userNameTextField, 25, SpringLayout.EAST, label);
+        springLayout.putConstraint(SpringLayout.NORTH, userNameTextField, 260, SpringLayout.NORTH, contentPane);
+        springLayout.putConstraint(SpringLayout.EAST, userNameTextField, -200, SpringLayout.EAST, contentPane);
+       
+
         JLabel label2 = new JLabel("Password");
+        label2.setForeground(Color.ORANGE);
+        label2.setFont(new Font(Font.DIALOG, Font.BOLD, 200));
+        JTextField passwordTextField = new JTextField();
+        contentPane.add(label2);
+        contentPane.add(passwordTextField);
         label2.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
-        contentPane.addLeft(label2);
-        contentPane.addRight(new JTextField());
-        contentPane.addSpacer(Box.createVerticalStrut(20));
+        springLayout.putConstraint(SpringLayout.WEST, label2, 200, SpringLayout.WEST, contentPane);
+        springLayout.putConstraint(SpringLayout.NORTH, label2, 100, SpringLayout.NORTH, label);
+        springLayout.putConstraint(SpringLayout.WEST, passwordTextField, 25, SpringLayout.EAST, label2);
+        springLayout.putConstraint(SpringLayout.EAST,  passwordTextField, -200, SpringLayout.EAST, contentPane);
+        springLayout.putConstraint(SpringLayout.NORTH,  passwordTextField, 80, SpringLayout.SOUTH, label);
         loginFrame.setLocationRelativeTo(null);
 
         JButton loginButton = new JButton("Login");
+        loginButton.setBackground(Color.orange);
+        loginButton.setForeground(Color.white);
         loginButton.addActionListener(new ActionListener(){
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 loginFrame.setVisible(false);
                 mainFrame.setVisible(true);
+                mainFrame.update(); 
                 
             }
 
         });
-        contentPane.addLeft(loginButton);
+
+        AccountCreationFrame accountCreationFrame = new AccountCreationFrame();
+        
+
+        JButton createAccountButton = new JButton("Create account");
+        createAccountButton.setBackground(Color.orange);
+        createAccountButton.setForeground(Color.white);
+        createAccountButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                accountCreationFrame.setVisible(true);
+
+                
+            }
+
+        });
+
+        contentPane.add(createAccountButton);
+        contentPane.add(loginButton);
+
+        springLayout.putConstraint(SpringLayout.NORTH, loginButton, 75, SpringLayout.SOUTH, label2);
+        springLayout.putConstraint(SpringLayout.NORTH, createAccountButton, 75, SpringLayout.SOUTH, label2);
+        springLayout.putConstraint(SpringLayout.EAST, loginButton, -600, SpringLayout.EAST, contentPane);
+        springLayout.putConstraint(SpringLayout.WEST, createAccountButton, 10, SpringLayout.EAST, loginButton);
+        
         JLabel passwordReset = new JLabel("Forgot Password");
-        contentPane.addRight(passwordReset);
+        contentPane.add(passwordReset);
+        springLayout.putConstraint(SpringLayout.NORTH, passwordReset, 25, SpringLayout.SOUTH, loginButton);
+        springLayout.putConstraint(SpringLayout.EAST, passwordReset, -450, SpringLayout.EAST, contentPane);
+        springLayout.putConstraint(SpringLayout.WEST, passwordReset,  520, SpringLayout.WEST, contentPane);
 
         loginFrame.setVisible(true);
         launch(App.class, args);
-        // SwingUtilities.invokeLater(new Runnable() {
-        //     @Override
-        //     public void run() {
-        //         initAndShowGUI();
-        //     }
-        // });
-        // try{
-        //     JdbcRunner.buildJdbc();
-        // }catch(SQLException e1){
-        //     e1.printStackTrace();
-        //     System.exit(1);
-        // }
         
-            
-        
-       
+
     }
 
     @Override
