@@ -21,6 +21,7 @@ import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
@@ -118,7 +119,7 @@ public class App extends Application
         label.setForeground(Color.ORANGE);
         label.setFont(new Font(Font.DIALOG, Font.BOLD, 50));
         JTextField userNameTextField = new JTextField();
-        
+        userNameTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
         label.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         contentPane.add(label);
         contentPane.add(userNameTextField);
@@ -146,7 +147,8 @@ public class App extends Application
         JLabel label2 = new JLabel("Password");
         label2.setForeground(Color.ORANGE);
         label2.setFont(new Font(Font.DIALOG, Font.BOLD, 200));
-        JTextField passwordTextField = new JTextField();
+        JPasswordField passwordTextField = new JPasswordField();
+        passwordTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
         contentPane.add(label2);
         contentPane.add(passwordTextField);
         label2.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
