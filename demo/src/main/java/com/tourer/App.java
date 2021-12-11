@@ -72,10 +72,17 @@ public class App extends Application
         
         if(username.equals(""))
             return false;
-       
+
         if(password.equals(""))
             return false;
-        return true;
+        
+        try {
+            return Connector.checkUserExistance(username, password);
+        } catch (SQLException e) {
+            return false;
+            
+        }  
+        
     }
 
     public static ButtonBox buttonBox;

@@ -22,6 +22,8 @@ import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 import javax.swing.text.DefaultEditorKit.PasteAction;
 
+import com.tourer.jdbc.Connector;
+
 public class AccountCreationFrame extends JFrame{
     
     
@@ -43,7 +45,7 @@ public class AccountCreationFrame extends JFrame{
         contentPane.setLayout(springLayout);
         this.setContentPane(contentPane);
 
-        // ussername, mail, password, reenter password, mail
+    
 
         JLabel userIcon = new JLabel();
         ImageIcon icon = new ImageIcon(new ImageIcon(UsserButton.iconPath).getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
@@ -171,8 +173,10 @@ public class AccountCreationFrame extends JFrame{
                 }
 
 
-                if(ok == true)
+                if(ok == true){
+                    Connector.createUser(username, password, mail);
                     AccountCreationFrame.this.setVisible(false);
+                }
                 
             }
 

@@ -25,6 +25,11 @@ public class Connector {
         
     }
 
+    public static void runUpdate(String query) throws SQLException{
+
+        Connector.statement.executeUpdate(query);
+    }
+
     public static ResultSet runQuery(String query) throws SQLException{
 
         ResultSet result = Connector.statement.executeQuery(query);
@@ -40,4 +45,27 @@ public class Connector {
     }
 
 
+    public static boolean checkUserExistance(String username, String password) throws SQLException{
+        
+
+        String query = "SELECT id from UserProfile WHERE username='" + username + "' AND password='" + password + "'";
+        
+        ResultSet resultSet = runQuery(query);
+        if (!resultSet.next())
+            return false;
+        return true;
+    }
+
+    public static boolean createUser(String username, String password, String email){
+        String query = "INSERT INTO UserProfile (creditcardno, username, password, email) VALUES ('-','" + username + "','" + password + "','" + email  + "');";
+        try {
+            runUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+            
+        }
+        
+        return true;
+    }
 }
