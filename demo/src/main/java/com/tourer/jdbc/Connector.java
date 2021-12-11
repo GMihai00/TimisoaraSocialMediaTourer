@@ -2,6 +2,7 @@ package com.tourer.jdbc;
 
 
 import java.sql.Statement;
+import java.util.Vector;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,5 +68,31 @@ public class Connector {
         }
         
         return true;
+    }
+
+    public static Vector <String> getUserList(String username) throws SQLException{
+        Vector <String> rez = new Vector <String>();
+
+        String query = "SELECT username FROM UserProfile WHERE username REGEXP '" + username + "' ORDER BY username LIMIT 10";
+        ResultSet resultSet = runQuery(query);
+        while(resultSet.next()){
+            String name = resultSet.getString("username");
+            rez.add(name);
+        }
+        
+        return rez;
+    }
+
+    public static Vector <String> getLocationList(String name) throws SQLException{
+        Vector <String> rez = new Vector <String>();
+
+        String query = "SELECT name FROM  Location WHERE name REGEXP '" + name + "' ORDER BY name LIMIT 10";
+        ResultSet resultSet = runQuery(query);
+        while(resultSet.next()){
+            String lname = resultSet.getString("name");
+            rez.add(lname);
+        }
+        
+        return rez;
     }
 }

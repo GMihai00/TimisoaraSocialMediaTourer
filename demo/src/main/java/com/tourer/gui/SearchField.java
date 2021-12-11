@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Vector;
 
@@ -12,6 +13,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTextField;
 
+import com.tourer.jdbc.*;
 
 public class SearchField extends JComboBox<String>{
     
@@ -39,6 +41,23 @@ public class SearchField extends JComboBox<String>{
                             }
                             else
                             {
+                                if(SearchField.this instanceof UserSearchField){
+                                    try {
+                                        latestSearches = Connector.getUserList(text);
+                                    } catch (SQLException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    }
+                                }
+                                else
+                                if(SearchField.this instanceof LocationSearchField){
+                                    try {
+                                        latestSearches = Connector.getLocationList(text);
+                                    } catch (SQLException e) {
+                                        // TODO Auto-generated catch block
+                                        e.printStackTrace();
+                                    }
+                                }
                                 DefaultComboBoxModel<String> m = SearchField.this.getSuggestedModel(SearchField.this.latestSearches, text);
                                 if(m.getSize() == 0 || SearchField.this.hide_flag){
                                     SearchField.super.hidePopup();

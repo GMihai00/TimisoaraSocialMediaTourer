@@ -92,8 +92,6 @@ public class App extends Application
         ColorPanel searchPanel = new ColorPanel();
         searchPanel.setLayout(new CardLayout());
         LocationSearchField locationSearchField = new LocationSearchField();
-        locationSearchField.addItem("Centru");
-        locationSearchField.addItem("Primarie");
         searchPanel.add(locationSearchField);
         UserSearchField userSearchField = new UserSearchField();
         userSearchField.addItem("Ana");
