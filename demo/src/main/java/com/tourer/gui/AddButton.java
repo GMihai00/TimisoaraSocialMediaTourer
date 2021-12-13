@@ -3,6 +3,7 @@ package com.tourer.gui;
 import com.tourer.App;
 import com.tourer.jdbc.*;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -34,11 +35,22 @@ public class AddButton extends CostumButton{
 
                 }
 
-
+                String locationDescription = AddLocationDialog.locationDescritpionTextField.getText();
+                String locationName = AddLocationDialog.locationNameTextField.getText();
+                if(locationDescription.equals("") == false && locationName.equals("") == false){
+                    //insert into database
+                    
+                    try {
+                        Connector.createLocation(latitude, longitude, locationName, locationDescription);
+                    } catch (SQLException e1) {
+                        
+                        JOptionPane.showMessageDialog(App.mainFrame, "Failde to add location to database", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
                 
-                
-
-                
+                AddLocationDialog.locationDescritpionTextField.setText("");
+                AddLocationDialog.locationNameTextField.setText("");
+ 
             }
             
         });

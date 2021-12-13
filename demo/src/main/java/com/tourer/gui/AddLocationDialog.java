@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Dialog.ModalityType;
 import java.awt.GridBagConstraints;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -26,6 +28,8 @@ public class AddLocationDialog extends JDialog{
     public static JLabel locationDescriptionLabel = new JLabel("Description: ");
     public static JTextArea locationDescritpionTextField = new JTextArea("");
     static{
+        locationNameTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
+        locationDescritpionTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
         Dimension size =new Dimension((int) MainFrame.screenSize.getWidth() / 6, (int) MainFrame.screenSize.getHeight() / 7);
         locationDescritpionTextField.setPreferredSize(size);
         locationDescritpionTextField.setMinimumSize(size);
@@ -62,7 +66,36 @@ public class AddLocationDialog extends JDialog{
         c.fill = GridBagConstraints.BOTH;
         contentPane.add(scrollPane, c);
         contentPane.addSpacer(Box.createHorizontalStrut(1));
-        contentPane.addLeft(new JButton("Add"));
+        JButton addButton = new JButton("Add");
+        addButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                boolean ok = true;
+                if(AddLocationDialog.locationNameTextField.getText().equals("")){
+                    AddLocationDialog.locationNameTextField.setBorder(AccountCreationFrame.RED_BORDER);
+                    ok = false;
+                }
+                else
+                {
+                    AddLocationDialog.locationNameTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
+                }
+                if(AddLocationDialog.locationDescritpionTextField.getText().equals("")){
+                    AddLocationDialog.locationDescritpionTextField.setBorder(AccountCreationFrame.RED_BORDER);
+                    ok = false;
+                }
+                else
+                {
+                    AddLocationDialog.locationDescritpionTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
+                }
+                if(ok == true){
+                    AddLocationDialog.this.setVisible(false);
+                }
+            }
+
+        });
+        contentPane.addLeft(addButton);
         this.setContentPane(contentPane);
 
 

@@ -3,6 +3,11 @@ package com.tourer.jdbc;
 
 import java.sql.Statement;
 import java.util.Vector;
+
+import javax.swing.JOptionPane;
+
+import com.tourer.App;
+
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -98,4 +103,19 @@ public class Connector {
         
         return rez;
     }
+
+    public static boolean createLocation(int latitude, int longitude, String name, String description) throws SQLException{
+        String query = "INSERT INTO Location(id, latitude, longitude, description, name) VALUES (" + Connector.USERID + "," + latitude + "," + longitude + ",'" + description + "','" + name  + "');";
+
+        try {
+            runUpdate(query);
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(App.mainFrame, "Failde to add location to database", "ERROR", JOptionPane.ERROR_MESSAGE);
+            return false;
+            
+        }
+        
+        return true;
+    }
+
 }
