@@ -8,11 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
 
-//like %string% same with regex .*string.*
+
 public class Connector {
     
     public static Connection connector;
     public static Statement statement;
+    public static Integer USERID;
     public static void Connect(String url, String user, String password) throws SQLException{
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -54,6 +55,8 @@ public class Connector {
         ResultSet resultSet = runQuery(query);
         if (!resultSet.next())
             return false;
+
+        USERID = resultSet.getInt("id");
         return true;
     }
 

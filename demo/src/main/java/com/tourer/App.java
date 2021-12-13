@@ -8,6 +8,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -56,7 +58,8 @@ public class App extends Application
     static String logoPath = "C:\\Java\\PI\\demo\\Icons\\Logo.jpg";
     static String errorPath = "C:\\Java\\PI\\demo\\Icons\\Error.png";
     static final ImageIcon errorIcon = new ImageIcon(new ImageIcon(errorPath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-    static MainFrame mainFrame = new MainFrame(gradientColor);
+    
+    public static MainFrame mainFrame = new MainFrame(gradientColor);
     static{
         mainFrame.setVisible(false);
         UIManager.put("OptionPane.errorIcon", errorIcon);
@@ -212,8 +215,29 @@ public class App extends Application
 
         });
 
+
+        userNameTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    passwordTextField.requestFocus();
+                }
+            }
+    
+        });
+
+        passwordTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    loginButton.doClick();
+                }
+            }
+    
+        });
+
         AccountCreationFrame accountCreationFrame = new AccountCreationFrame();
-        
+        ButtonSettings.cardDataDialog = new CardDataDialog(accountCreationFrame);
 
         JButton createAccountButton = new JButton("Create account");
         createAccountButton.setBackground(Color.orange);

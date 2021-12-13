@@ -7,12 +7,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.lang.reflect.Method;
 
+
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class ButtonSettings extends GridPanel{
     
-    public static CardDataFrame cardDataFrame = new CardDataFrame();
+    public static CardDataDialog cardDataDialog; 
     Color c1Select;
     Color c2Select;
     String text;
@@ -100,7 +101,7 @@ public class ButtonSettings extends GridPanel{
                 
                 switch(nr){
                     case 1:
-                        cardDataFrame.setVisible(true);
+                        cardDataDialog.setVisible(true);
                         break;
                 }
                 

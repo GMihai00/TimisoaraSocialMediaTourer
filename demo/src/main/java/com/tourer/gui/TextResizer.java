@@ -33,7 +33,8 @@ public class TextResizer extends Resizer{
                 Font newFont = new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, newTextSize);
                 changeFont(ButtonBox.userSettingsMenu, newFont);
                 changeFont(ButtonBox.appMenuSettings, newFont);
-                changeFont(ButtonSettings.cardDataFrame, newFont);
+                changeFont(ButtonSettings.cardDataDialog, newFont);
+                changeFont(AddButton.addLocationDialog, newFont);
             }
 
             

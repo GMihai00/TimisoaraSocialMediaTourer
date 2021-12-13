@@ -2,19 +2,21 @@ package com.tourer.gui;
 
 import java.awt.Dimension;
 import java.awt.Font;
-
+import java.awt.Frame;
 import javax.swing.Box;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 
-public class CardDataFrame extends JFrame{
+public class CardDataDialog extends JDialog{
  
     public static String[] cardTypes= new String[]{"Visa", "MasterCard"};
     public static String[] mounth = new String[]{"01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"};
     public static String[] year = new String[]{"2021", "2022", "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032"};
-    public CardDataFrame(){
+    public CardDataDialog(Frame frame){
+        super(frame, "Add card data", ModalityType.APPLICATION_MODAL);
         this.setVisible(false);
         this.setSize(new Dimension((MainFrame.screenSize.width * 3) / 4 , (MainFrame.screenSize.height * 3) / 4));
 
@@ -52,7 +54,7 @@ public class CardDataFrame extends JFrame{
         contentPane.addRight(new JTextField());
         contentPane.addSpacer(Box.createVerticalStrut(20));
         this.setContentPane(contentPane);
-        
+        this.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         this.setLocationRelativeTo(null);
     }
 }
