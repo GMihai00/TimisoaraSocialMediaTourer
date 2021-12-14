@@ -31,6 +31,10 @@ public class LanguagePicker extends SearchField{
         englishToRomanian.put("Dark Mode", "Mod intunecat");
         englishToRomanian.put("Notifications", "Notificari");
         englishToRomanian.put("Resizing", "Redimensionare");
+        englishToRomanian.put("Longitude:", "Longitudine:");
+        englishToRomanian.put("Latitude:", "Latitudine:");
+        englishToRomanian.put("Location name:", "Numele locatiei");
+        englishToRomanian.put("Description:", "Descriere:");
         romanianToEnglish = new HashMap<String, String>();
         for(Map.Entry<String, String> entry : englishToRomanian.entrySet()){
             romanianToEnglish.put(entry.getValue(), entry.getKey());
@@ -105,7 +109,8 @@ public class LanguagePicker extends SearchField{
                 String language = (String) LanguagePicker.this.getSelectedItem();
                 updateLanguage(ButtonBox.userSettingsMenu, language);
                 updateLanguage(ButtonBox.appMenuSettings, language);
-                
+                //bug when initializing windows
+                //updateLanguage(AddButton.addLocationDialog, language);
             }
 
         });

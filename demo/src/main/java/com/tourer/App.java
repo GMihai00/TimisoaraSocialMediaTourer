@@ -1,5 +1,10 @@
 package com.tourer;
 
+
+import java.io.IOException;
+import java.io.File;
+
+import java.awt.Toolkit;
 import java.awt.Image;
 import java.awt.Desktop;
 import java.awt.Dimension;
@@ -10,13 +15,15 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
+
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.SQLException;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -90,8 +97,12 @@ public class App extends Application
 
     public static ButtonBox buttonBox;
     public static void initAndShowGUI(){
+        Dimension buttonMenuDim = new Dimension(150, MainFrame.HEIGHT);
         ColorPanel menu = new ColorPanel();
-
+        menu.setSize(buttonMenuDim);
+        menu.setPreferredSize(buttonMenuDim);
+        menu.setMaximumSize(buttonMenuDim);
+        menu.setMinimumSize(buttonMenuDim);
         ColorPanel searchPanel = new ColorPanel();
         searchPanel.setLayout(new CardLayout());
         LocationSearchField locationSearchField = new LocationSearchField();
@@ -134,11 +145,19 @@ public class App extends Application
             e1.printStackTrace();
             System.exit(1);
         }
-        
+        String backgroundPath = "Icons\\LoginBackground.jpg";
+        Image background = Toolkit.getDefaultToolkit().getImage(backgroundPath);
+        try {
+            BufferedImage bufferedImage = ImageIO.read(new File(backgroundPath));
+            background = bufferedImage.getScaledInstance((int) MainFrame.screenSize.width * 3 / 4 ,(int) MainFrame.screenSize.height * 3 / 4, Image.SCALE_SMOOTH);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         JFrame loginFrame = new JFrame();
         loginFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         SpringLayout springLayout = new SpringLayout();
-        ColorPanel contentPane = new ColorPanel();
+        BackGroundPanel contentPane = new BackGroundPanel(background);
 
         contentPane.setLayout(springLayout);
         loginFrame.setSize(new Dimension((MainFrame.screenSize.width * 3) / 4 , (MainFrame.screenSize.height * 3) / 4));
@@ -154,17 +173,17 @@ public class App extends Application
         contentPane.add(label);
         contentPane.add(userNameTextField);
         ImageIcon logo = new ImageIcon(new ImageIcon(logoPath).getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH));
-        JLabel logoLabel = new JLabel();
-        logoLabel.setIcon(logo);
+        // JLabel logoLabel = new JLabel();
+        // logoLabel.setIcon(logo);
         JLabel titleLabel = new JLabel("Timisoara Tourer");
         titleLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 100));
         titleLabel.setForeground(Color.ORANGE);
         contentPane.add(titleLabel);
-        contentPane.add(logoLabel);
+        //contentPane.add(logoLabel);
         springLayout.putConstraint(SpringLayout.NORTH, titleLabel, 40, SpringLayout.NORTH, contentPane);
         springLayout.putConstraint(SpringLayout.WEST, titleLabel, 50, SpringLayout.WEST, contentPane);
-        springLayout.putConstraint(SpringLayout.NORTH, logoLabel, 10, SpringLayout.NORTH, contentPane);
-        springLayout.putConstraint(SpringLayout.EAST, logoLabel, -10, SpringLayout.EAST, contentPane);
+        //springLayout.putConstraint(SpringLayout.NORTH, logoLabel, 10, SpringLayout.NORTH, contentPane);
+        //springLayout.putConstraint(SpringLayout.EAST, logoLabel, -10, SpringLayout.EAST, contentPane);
 
         springLayout.putConstraint(SpringLayout.NORTH, label, 250, SpringLayout.NORTH, contentPane);
         springLayout.putConstraint(SpringLayout.WEST, label, 200, SpringLayout.WEST, contentPane);

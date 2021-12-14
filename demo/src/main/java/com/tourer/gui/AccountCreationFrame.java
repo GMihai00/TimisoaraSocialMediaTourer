@@ -33,7 +33,8 @@ import com.tourer.jdbc.Connector;
 
 public class AccountCreationFrame extends JFrame{
     
-    public final static String backgroundPath = "Icons\\LoginBackground.jpg";
+    public final static String createUserIcon = "Icons\\CreateUserIcon.png";
+    public final static String backgroundPath = "Icons\\AccountCreationBackground.png";
     public final static LineBorder BLACK_BORDER = new LineBorder(Color.BLACK, 4);
     public final static LineBorder RED_BORDER = new LineBorder(Color.RED, 4);
     public final static Pattern USERNAME_PATTERN = Pattern.compile("^.{6,}$");
@@ -69,7 +70,7 @@ public class AccountCreationFrame extends JFrame{
     
 
         JLabel userIcon = new JLabel();
-        ImageIcon icon = new ImageIcon(new ImageIcon(UsserButton.iconPath).getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
+        ImageIcon icon = new ImageIcon(new ImageIcon(createUserIcon).getImage().getScaledInstance(150, 150, Image.SCALE_SMOOTH));
         userIcon.setIcon(icon);
         contentPane.add(userIcon);
         springLayout.putConstraint(SpringLayout.NORTH, userIcon, 50, SpringLayout.NORTH, contentPane);
