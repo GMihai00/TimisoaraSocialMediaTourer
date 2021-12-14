@@ -41,4 +41,5 @@ public class ColorPanel extends JPanel{
         g2d.setPaint(gp);
         g2d.fillRect(0, 0, w, h);
     }
+
 }

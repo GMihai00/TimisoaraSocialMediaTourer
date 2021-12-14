@@ -1,14 +1,21 @@
 package com.tourer.gui;
 
+import java.io.File;
+import java.io.IOException;
 import java.awt.Image;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.Dimension;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.awt.event.ActionEvent;
+import java.awt.Toolkit;
 
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -26,23 +33,37 @@ import com.tourer.jdbc.Connector;
 
 public class AccountCreationFrame extends JFrame{
     
-    
+    public final static String backgroundPath = "Icons\\LoginBackground.jpg";
     public final static LineBorder BLACK_BORDER = new LineBorder(Color.BLACK, 4);
     public final static LineBorder RED_BORDER = new LineBorder(Color.RED, 4);
     public final static Pattern USERNAME_PATTERN = Pattern.compile("^.{6,}$");
     //Minimum eight characters, at least one letter, one number and one special character
     public final static Pattern PASSWORD_PATTERN = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$");
     public final static Pattern MAIL_PATTERN = Pattern.compile("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
-
+    public static Image background = Toolkit.getDefaultToolkit().getImage(backgroundPath);
+    {
+        try {
+            BufferedImage bufferedImage = ImageIO.read(new File(backgroundPath));
+            background = bufferedImage.getScaledInstance((int) MainFrame.screenSize.getWidth() * 2 / 3, (int) MainFrame.screenSize.getHeight() * 2 / 3, Image.SCALE_SMOOTH);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+    
     public AccountCreationFrame(){
-
+        this.setSize(new Dimension((int) MainFrame.screenSize.getWidth() * 2 / 3, (int) MainFrame.screenSize.getHeight() * 2 / 3));
+        this.setResizable(false);
         this.setVisible(false);
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        this.setSize(new Dimension((MainFrame.screenSize.width * 2) / 3 , (MainFrame.screenSize.height * 2) / 3));
+        
 
-        ColorPanel contentPane = new ColorPanel();
+        BackGroundPanel contentPane = new BackGroundPanel(background);
+        
         SpringLayout springLayout = new SpringLayout();
         contentPane.setLayout(springLayout);
+        
+        
         this.setContentPane(contentPane);
 
     
@@ -62,6 +83,19 @@ public class AccountCreationFrame extends JFrame{
         
 
         JTextField usernameTextField = new JTextField();
+        JPasswordField passwordTextField = new JPasswordField();
+        JPasswordField reenterpasswordTextField = new JPasswordField();
+        JTextField mailTextField = new JTextField();
+        JButton signUpButton = new JButton("Sign Up");
+        usernameTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    passwordTextField.requestFocus();
+                }
+            }
+    
+        });
         usernameTextField.setBorder(BLACK_BORDER);
         contentPane.add(usernameTextField);
         springLayout.putConstraint(SpringLayout.WEST, usernameTextField, 400, SpringLayout.WEST, contentPane);
@@ -75,7 +109,15 @@ public class AccountCreationFrame extends JFrame{
         contentPane.add(passwordLabel);
         springLayout.putConstraint(SpringLayout.NORTH, passwordLabel, 20, SpringLayout.SOUTH, usernameLabel);
 
-        JPasswordField passwordTextField = new JPasswordField();
+        passwordTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    reenterpasswordTextField.requestFocus();
+                }
+            }
+    
+        });
         passwordTextField.setBorder(BLACK_BORDER);
         contentPane.add(passwordTextField);
         springLayout.putConstraint(SpringLayout.WEST, passwordTextField, 400, SpringLayout.WEST, contentPane);
@@ -89,7 +131,15 @@ public class AccountCreationFrame extends JFrame{
         contentPane.add(reenterpasswordLabel);
         springLayout.putConstraint(SpringLayout.NORTH, reenterpasswordLabel, 20, SpringLayout.SOUTH, passwordLabel);
 
-        JPasswordField reenterpasswordTextField = new JPasswordField();
+        reenterpasswordTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    mailTextField.requestFocus();
+                }
+            }
+    
+        });
         reenterpasswordTextField.setBorder(BLACK_BORDER);
         contentPane.add(reenterpasswordTextField);
         springLayout.putConstraint(SpringLayout.WEST, reenterpasswordTextField, 400, SpringLayout.WEST, contentPane);
@@ -104,7 +154,15 @@ public class AccountCreationFrame extends JFrame{
         springLayout.putConstraint(SpringLayout.NORTH, mailLabel, 20, SpringLayout.SOUTH, reenterpasswordLabel);
         
 
-        JTextField mailTextField = new JTextField();
+        mailTextField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER){
+                    signUpButton.doClick();
+                }
+            }
+    
+        });
         mailTextField.setBorder(BLACK_BORDER);
         
         contentPane.add(mailTextField);
@@ -113,7 +171,7 @@ public class AccountCreationFrame extends JFrame{
         springLayout.putConstraint(SpringLayout.NORTH, mailTextField, 35, SpringLayout.SOUTH, reenterpasswordLabel);
         springLayout.putConstraint(SpringLayout.EAST,  mailLabel, -20, SpringLayout.WEST, mailTextField);
 
-        JButton signUpButton = new JButton("Sign Up");
+        
         signUpButton.setBackground(Color.orange);
         signUpButton.setForeground(Color.white);
         signUpButton.addActionListener(new ActionListener(){
