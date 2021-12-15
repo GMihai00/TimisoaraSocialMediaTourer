@@ -16,7 +16,6 @@ import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,9 +24,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.SpringLayout;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
-import javax.swing.text.DefaultEditorKit.PasteAction;
+
 
 import com.tourer.jdbc.Connector;
 

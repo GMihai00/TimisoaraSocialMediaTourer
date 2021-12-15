@@ -18,6 +18,7 @@ public class UsserButton extends CostumButton{
             public void actionPerformed(ActionEvent e) {
                 SettingsButton.appMenuSettings.setVisible(false);
                 UsserButton.userSettingsMenu.setVisible(true);
+                
             }
             
         });

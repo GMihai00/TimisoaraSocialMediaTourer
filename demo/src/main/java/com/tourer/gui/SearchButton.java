@@ -22,10 +22,10 @@ public class SearchButton extends CostumButton{
                 for(int i = 0; i < SearchField.allFields.size(); i++)
                     SearchField.allFields.get(i).setVisible(false);
                 SearchButton.userSearchField.setVisible(true);
-                JTextField textLocal = (JTextField) SearchButton.userSearchField.getEditor().getEditorComponent();
-                if(textLocal.getText().equals(""))
-                    textLocal.setText("Search a user");
-                
+                // JTextField textLocal = (JTextField) SearchButton.userSearchField.getEditor().getEditorComponent();
+                // if(textLocal.getText().equals(""))
+                //     textLocal.setText("Search a user");
+                SearchButton.userSearchField.requestFocus();    
             }
             
         });

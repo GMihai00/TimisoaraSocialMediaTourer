@@ -24,28 +24,24 @@ import java.net.URL;
 import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
-import javax.swing.Box;
+
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import com.tourer.gui.*;
-import com.tourer.gui.map.GoogleMaps;
+// import com.tourer.gui.map.GoogleMaps;
 import com.tourer.jdbc.*;
 import com.tourer.jdbc.JdbcRunner;
 
 import java.awt.CardLayout;
 
-import java.util.*;
 
 import javafx.application.Platform;
-import javax.swing.JTextPane;
 import javax.swing.SpringLayout;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -97,7 +93,16 @@ public class App extends Application
 
     public static ButtonBox buttonBox;
     public static void initAndShowGUI(){
-        Dimension buttonMenuDim = new Dimension(150, MainFrame.HEIGHT);
+        Dimension buttonMenuDim = new Dimension(150, MainFrame.screenSize.height - 50);
+        String menuBackgroundPath = "Icons\\MainSideMenuBackground_2.jpg";
+        Image menuBackground = Toolkit.getDefaultToolkit().getImage(menuBackgroundPath);
+        try {
+            BufferedImage bufferedImage = ImageIO.read(new File(menuBackgroundPath));
+            menuBackground  = bufferedImage.getScaledInstance(150, MainFrame.screenSize.height - 50, Image.SCALE_SMOOTH);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         ColorPanel menu = new ColorPanel();
         menu.setSize(buttonMenuDim);
         menu.setPreferredSize(buttonMenuDim);
@@ -110,6 +115,7 @@ public class App extends Application
         UserSearchField userSearchField = new UserSearchField();
         userSearchField.addItem("Ana");
         userSearchField.addItem("Andreea");
+        searchPanel.setSize(new Dimension(MainFrame.screenSize.width, 50));
         searchPanel.add(userSearchField);
 
         buttonBox = new ButtonBox(locationSearchField, userSearchField);
@@ -172,7 +178,7 @@ public class App extends Application
         label.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         contentPane.add(label);
         contentPane.add(userNameTextField);
-        ImageIcon logo = new ImageIcon(new ImageIcon(logoPath).getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH));
+        //ImageIcon logo = new ImageIcon(new ImageIcon(logoPath).getImage().getScaledInstance(150, 200, Image.SCALE_SMOOTH));
         // JLabel logoLabel = new JLabel();
         // logoLabel.setIcon(logo);
         JLabel titleLabel = new JLabel("Timisoara Tourer");
