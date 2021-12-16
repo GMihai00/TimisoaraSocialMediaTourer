@@ -57,6 +57,7 @@ import javafx.application.Application;
 
 public class App extends Application 
 {
+    public static AccountCreationFrame accountCreationFrame;
     static GradientColor gradientColor = new GradientColor(new Color(100, 232, 222), new Color(138, 84, 235));
     static String logoPath = "C:\\Java\\PI\\demo\\Icons\\Logo.jpg";
     static String errorPath = "C:\\Java\\PI\\demo\\Icons\\Error.png";
@@ -261,7 +262,7 @@ public class App extends Application
     
         });
 
-        AccountCreationFrame accountCreationFrame = new AccountCreationFrame();
+        accountCreationFrame = new AccountCreationFrame();
         ButtonSettings.cardDataDialog = new CardDataDialog(accountCreationFrame);
 
         JButton createAccountButton = new JButton("Create account");

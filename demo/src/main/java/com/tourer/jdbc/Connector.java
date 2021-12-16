@@ -3,6 +3,8 @@ package com.tourer.jdbc;
 
 import java.sql.Statement;
 import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JOptionPane;
 
@@ -16,6 +18,10 @@ import java.sql.Connection;
 
 public class Connector {
     
+    public static Pattern ALREADY_IN_USE_USERNAME = Pattern.compile("Duplicate entry '.+' for key 'userprofile.username'");
+    public static String ERROR_DUBLICATE_USERNAME = "User already exist with given username";
+    public static Pattern ALREADY_IN_USE_EMAIL = Pattern.compile("Duplicate entry '.+' for key 'userprofile.email'");
+    public static String ERROR_DUBLICATE_EMAIL = "User already exist with given email";
     public static Connection connector;
     public static Statement statement;
     public static Integer USERID;
@@ -70,11 +76,32 @@ public class Connector {
         try {
             runUpdate(query);
         } catch (SQLException e) {
-            e.printStackTrace();
+            
+            String SQLConstraintError = e.getMessage();
+            System.out.println(SQLConstraintError);
+            Matcher userMatcher = ALREADY_IN_USE_USERNAME.matcher(SQLConstraintError);
+            if(userMatcher.find())
+            {
+                JOptionPane.showMessageDialog(App.accountCreationFrame, ERROR_DUBLICATE_USERNAME, "ERROR", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }   
+            Matcher mailMatcher = ALREADY_IN_USE_EMAIL.matcher(SQLConstraintError);
+            if(mailMatcher.find())
+            {
+                JOptionPane.showMessageDialog(App.accountCreationFrame, ERROR_DUBLICATE_EMAIL, "ERROR", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }   
+            
+            JOptionPane.showMessageDialog(App.accountCreationFrame, "Failed to create user", "ERROR", JOptionPane.ERROR_MESSAGE);
             return false;
             
         }
-        
+        try{
+            MailSender.sendEmail(email);
+        }catch(Exception e){
+            e.printStackTrace();
+            System.out.println("Failed to send email");
+        }
         return true;
     }
 
@@ -110,7 +137,32 @@ public class Connector {
         try {
             runUpdate(query);
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(App.mainFrame, "Failde to add location to database", "ERROR", JOptionPane.ERROR_MESSAGE);
+            
+            boolean updateok = modifyLocation(latitude, longitude, name, description);
+            
+            if(updateok == false){
+                JOptionPane.showMessageDialog(App.mainFrame, "Failde to add location to database", "ERROR", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+            else
+            {
+                JOptionPane.showMessageDialog(App.mainFrame, "Current location already existant, updated it", "UPDATE", JOptionPane.INFORMATION_MESSAGE);
+                
+            }
+            
+
+        }
+        
+        return true;
+    }
+
+    public static boolean modifyLocation(int latitude, int longitude, String name, String description){
+        String query = "UPDATE Location SET name='" + name + "', description='" + description  +"' WHERE id="+ Connector.USERID +" AND latitude="+ latitude +" AND longitude="+ longitude +";";
+
+        try {
+            runUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
             
         }

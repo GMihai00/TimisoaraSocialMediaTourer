@@ -231,8 +231,11 @@ public class AccountCreationFrame extends JFrame{
 
 
                 if(ok == true){
-                    Connector.createUser(username, password, mail);
-                    AccountCreationFrame.this.setVisible(false);
+                    boolean ok2 = Connector.createUser(username, password, mail);
+
+                    if(ok2 == true)
+                        AccountCreationFrame.this.setVisible(false);
+                    
                 }
                 
             }
