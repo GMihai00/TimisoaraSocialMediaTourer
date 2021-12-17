@@ -34,7 +34,7 @@ public class AppSettingsMenu extends SettingsMenu{
     public final static String fontStyle = Font.DIALOG;
     public final static int fontType =  Font.PLAIN;
     final static LineBorder border = new LineBorder(Color.orange,1, true);
-    final static Color PURPLE_COLOR = new Color(101, 24, 115);
+    public final static Color PURPLE_COLOR = new Color(101, 24, 115);
     final static String[] languages = new String[]{"English", "Romana"}; 
     final static GradientColor TRANSP_GRADIENT_COLOR = new GradientColor(new Color(213, 134, 145, 123), new Color(213, 134, 145, 123));
     public AppSettingsMenu() {
@@ -148,20 +148,24 @@ public class AppSettingsMenu extends SettingsMenu{
         windowPanel.add(languagePanel);
         
 
-        ColorPanel securityPanel = new ColorPanel();
+        BackGroundPanel securityPanel = new BackGroundPanel(windowPanelbackground);
         securityPanel.setPreferredSize(new Dimension(MainFrame.screenSize.width * 4 / 5, MainFrame.screenSize.height));
         securityPanel.setLayout(new BoxLayout(securityPanel, BoxLayout.PAGE_AXIS));
-        securityPanel.setBorder(BorderFactory.createTitledBorder(border, "Settings", TitledBorder.LEADING, TitledBorder.BELOW_TOP, new Font(fontStyle, fontType, textSize), PURPLE_COLOR));
         securityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         
-        ButtonSettings cardUpdateButton = new ButtonSettings(Color.red, Color.yellow, "Update card data", 1);
-        securityPanel.add(cardUpdateButton);
+        GridPanel cardDataPanel = new GridPanel(TRANSP_GRADIENT_COLOR);
+        cardDataPanel.setOpaque(false);
+        cardDataPanel.setBorder(BorderFactory.createTitledBorder(border, "CardData", TitledBorder.LEADING, TitledBorder.BELOW_TOP, new Font(fontStyle, fontType, textSize), PURPLE_COLOR));
+        cardDataPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+        ButtonSettings cardUpdateButton = new ButtonSettings(Color.red, Color.yellow, "Update card data", 1);
+        cardDataPanel.addLeft(cardUpdateButton);
+        securityPanel.add(cardDataPanel);
         ButtonSettings.cardPanel.add(windowPanel, "Window");
         ButtonSettings.cardPanel.add(securityPanel, "Security");
         ButtonSettings.cardLayout.show(ButtonSettings.cardPanel, "Window");
 
-
+        
 
         this.add(ButtonSettings.cardPanel, BorderLayout.CENTER);
         this.update();

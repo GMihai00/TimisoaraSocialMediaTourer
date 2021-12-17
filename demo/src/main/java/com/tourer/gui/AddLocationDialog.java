@@ -1,5 +1,6 @@
 package com.tourer.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
@@ -28,6 +29,10 @@ public class AddLocationDialog extends JDialog{
     public static JLabel locationDescriptionLabel = new JLabel("Description: ");
     public static JTextArea locationDescritpionTextField = new JTextArea("");
     static{
+        longitude.setForeground(Color.orange);
+        latitude.setForeground(Color.orange);
+        locationNameLabel.setForeground(Color.orange);
+        locationDescriptionLabel.setForeground(Color.orange);
         locationNameTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
         locationDescritpionTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
         Dimension size =new Dimension((int) MainFrame.screenSize.getWidth() / 6, (int) MainFrame.screenSize.getHeight() / 7);

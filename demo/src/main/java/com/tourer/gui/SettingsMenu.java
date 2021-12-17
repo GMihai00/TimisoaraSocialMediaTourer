@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 import java.awt.BorderLayout;
 
 public class SettingsMenu extends JFrame{
-    BorderLayout layout = new BorderLayout();
+    static BorderLayout layout = new BorderLayout();
     public SettingsMenu() {
         
         this.setSize(new Dimension((MainFrame.screenSize.width * 5) / 6 , (MainFrame.screenSize.height * 5) / 6));

@@ -16,11 +16,15 @@ public class ButtonSettings extends GridPanel{
     public static CardDataDialog cardDataDialog; 
     Color c1Select;
     Color c2Select;
+    static Color c3Select = Color.black;
+    static Color c3 = Color.orange;
     String text;
     static CardLayout cardLayout;
     static JPanel cardPanel;
+    public JLabel label;
     String name;
     static{
+        
         cardPanel = new JPanel();
         cardLayout = new CardLayout();
         cardPanel.setLayout(cardLayout);
@@ -30,8 +34,9 @@ public class ButtonSettings extends GridPanel{
         this.c1Select = Color.RED;
         this.c2Select = Color.YELLOW;
         this.name = name;
-        JLabel label = new JLabel(name);
+        label = new JLabel(name);
         label.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
+        label.setForeground(c3);
         this.addLeft(label);
 
         this.addMouseListener(new MouseAdapter(){
@@ -56,7 +61,8 @@ public class ButtonSettings extends GridPanel{
         this.c1Select = c1Select;
         this.c2Select = c2Select;
         this.name = name;
-        JLabel label = new JLabel(name);
+        label = new JLabel(name);
+        label.setForeground(c3);
         label.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         this.addLeft(label);
 
@@ -82,7 +88,8 @@ public class ButtonSettings extends GridPanel{
         this.c1Select = c1Select;
         this.c2Select = c2Select;
         this.name = name;
-        JLabel label = new JLabel(name);
+        label = new JLabel(name);
+        label.setForeground(c3);
         label.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         this.addLeft(label);
 
@@ -112,10 +119,14 @@ public class ButtonSettings extends GridPanel{
     public void swapColors(){
         Color auxc1 = c1;
         Color auxc2 = c2;
+        Color auxc3 = c3;
         c1 = c1Select;
         c2 = c2Select;
+        c3 = c3Select;
         c1Select = auxc1;
         c2Select = auxc2;
+        c3Select = auxc3;
+        label.setForeground(c3);
         repaint();
         revalidate();
     }

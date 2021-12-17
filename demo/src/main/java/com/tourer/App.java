@@ -58,7 +58,7 @@ import javafx.application.Application;
 public class App extends Application 
 {
     public static AccountCreationFrame accountCreationFrame;
-    static GradientColor gradientColor = new GradientColor(new Color(100, 232, 222), new Color(138, 84, 235));
+    public static GradientColor gradientColor = new GradientColor(new Color(38, 0, 110), AppSettingsMenu.PURPLE_COLOR);
     static String logoPath = "C:\\Java\\PI\\demo\\Icons\\Logo.jpg";
     static String errorPath = "C:\\Java\\PI\\demo\\Icons\\Error.png";
     static final ImageIcon errorIcon = new ImageIcon(new ImageIcon(errorPath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
@@ -95,7 +95,7 @@ public class App extends Application
     public static ButtonBox buttonBox;
     public static void initAndShowGUI(){
         Dimension buttonMenuDim = new Dimension(150, MainFrame.screenSize.height - 50);
-        String menuBackgroundPath = "Icons\\MainSideMenuBackground_2.jpg";
+        String menuBackgroundPath = "Icons\\MainSideMenuBackground.jpg";
         Image menuBackground = Toolkit.getDefaultToolkit().getImage(menuBackgroundPath);
         try {
             BufferedImage bufferedImage = ImageIO.read(new File(menuBackgroundPath));
@@ -104,6 +104,7 @@ public class App extends Application
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+        
         ColorPanel menu = new ColorPanel();
         menu.setSize(buttonMenuDim);
         menu.setPreferredSize(buttonMenuDim);

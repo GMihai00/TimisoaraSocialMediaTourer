@@ -1,5 +1,6 @@
 package com.tourer.gui;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
@@ -22,6 +23,7 @@ public class CardDataDialog extends JDialog{
 
         GridPanel contentPane = new GridPanel();
         JLabel label = new JLabel("Credit card");
+        label.setForeground(Color.orange);
         label.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         contentPane.addLeft(label);
         SearchField cardPick = new SearchField();
@@ -32,12 +34,14 @@ public class CardDataDialog extends JDialog{
         contentPane.addRight(cardPick);
         contentPane.addSpacer(Box.createVerticalStrut(20));
         JLabel label2 = new JLabel("Card number");
+        label2.setForeground(Color.orange);
         label2.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         contentPane.addLeft(label2);
         contentPane.addRight(new JTextField());
         contentPane.addSpacer(Box.createVerticalStrut(20));
         JLabel label3 = new JLabel("Expiration date");
         label3.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
+        label3.setForeground(Color.orange);
         contentPane.addLeft(label3);
         SearchField datePick = new SearchField();
         datePick.setVisible(true);
@@ -50,6 +54,7 @@ public class CardDataDialog extends JDialog{
         contentPane.addSpacer(Box.createVerticalStrut(20));
         JLabel label4 = new JLabel("Security Code");
         label4.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
+        label4.setForeground(Color.orange);
         contentPane.addLeft(label4);
         contentPane.addRight(new JTextField());
         contentPane.addSpacer(Box.createVerticalStrut(20));

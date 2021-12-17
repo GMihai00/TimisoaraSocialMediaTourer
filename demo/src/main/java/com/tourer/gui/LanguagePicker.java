@@ -42,14 +42,24 @@ public class LanguagePicker extends SearchField{
 
     }
     public static String getTranslatedVersion(String text, String language){
-
+        
+        if(language == null)
+            return "-";
         switch(language){
             case "English":
-                return romanianToEnglish.get(text);
+                try{
+                    return romanianToEnglish.get(text);
+                }catch(Exception e){
+                    return "-";
+                }
             case "Romana":
-                return englishToRomanian.get(text);
+                try{
+                    return englishToRomanian.get(text);
+                }catch (Exception e){
+                    return "-";
+                }
             default:
-                return "null";
+                return "-";
         }
     }
 
@@ -102,6 +112,7 @@ public class LanguagePicker extends SearchField{
         }
     }
     public LanguagePicker(){
+        
         this.addActionListener(new ActionListener(){
 
             @Override
