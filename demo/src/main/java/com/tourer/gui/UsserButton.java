@@ -1,6 +1,7 @@
 package com.tourer.gui;
 
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class UsserButton extends CostumButton{
@@ -17,6 +18,12 @@ public class UsserButton extends CostumButton{
             @Override
             public void actionPerformed(ActionEvent e) {
                 SettingsButton.appMenuSettings.setVisible(false);
+                try {
+                    UsserButton.userSettingsMenu.updateVisited();
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
                 UsserButton.userSettingsMenu.setVisible(true);
                 
             }

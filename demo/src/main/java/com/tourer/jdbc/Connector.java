@@ -1,5 +1,6 @@
 package com.tourer.jdbc;
 
+import com.tourer.gui.map.Location;
 
 import java.sql.Statement;
 import java.util.Vector;
@@ -168,6 +169,25 @@ public class Connector {
         }
         
         return true;
+    }
+
+    public static Vector <Location> getVisitedLocations() throws SQLException{
+        Vector <Location> locationList = new Vector<Location>(); 
+        
+        String query = "SELECT latitude, longitude, description, name FROM  Location WHERE id=" + USERID + ";";
+
+        ResultSet resultSet = runQuery(query);
+        while(resultSet.next()){
+            
+            String name = resultSet.getString("name");
+            String description = resultSet.getString("description");
+            Double latitude = resultSet.getDouble("latitude");
+            Double longitude = resultSet.getDouble("longitude");
+            locationList.add(new Location(name, description, longitude, latitude));
+        }
+        
+        return locationList;
+        
     }
 
 }
