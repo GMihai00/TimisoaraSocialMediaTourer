@@ -35,12 +35,8 @@ public class AddLocationDialog extends JDialog{
         locationDescriptionLabel.setForeground(Color.orange);
         locationNameTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
         locationDescritpionTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
-        Dimension size =new Dimension((int) MainFrame.screenSize.getWidth() / 6, (int) MainFrame.screenSize.getHeight() / 7);
-        locationDescritpionTextField.setPreferredSize(size);
-        locationDescritpionTextField.setMinimumSize(size);
-        locationDescriptionLabel.setMaximumSize(size);
-    }
-    static{
+        
+
         longitude.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         latitude.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         latitude.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
@@ -64,7 +60,7 @@ public class AddLocationDialog extends JDialog{
         JScrollPane scrollPane = new JScrollPane(locationDescritpionTextField);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);  
-        
+        scrollPane.setPreferredSize(new Dimension((int) MainFrame.screenSize.getWidth() / 6, (int) MainFrame.screenSize.getHeight() / 7));
         GridBagConstraints c = new GridBagConstraints();
         c.weightx = 1;
         c.weighty = 1;

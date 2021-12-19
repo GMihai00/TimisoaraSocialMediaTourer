@@ -22,9 +22,9 @@ public @SuppressWarnings("serial") class ViewPort extends JViewport {
      * @param c1 main color
      * @param c2 secondary color
      */
-    public ViewPort(Color c1, Color c2) {
-        this.c1 = c1;
-        this.c2 = c2;
+    public ViewPort(GradientColor g) {
+        this.c1 = g.mainColor;
+        this.c2 = g.secondaryColor;
     }
 
     

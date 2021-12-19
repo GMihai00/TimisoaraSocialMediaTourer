@@ -7,7 +7,6 @@ import com.tourer.jdbc.Connector;
 import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -17,8 +16,11 @@ import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import java.awt.Image;
@@ -32,6 +34,8 @@ public class UserSettingsMenu extends SettingsMenu{
     public static JLabel userIcon = new JLabel();
     public static JScrollPane listScroller;
     public JList list;
+    public final static MyListCellRenderer myListCellRenderer = new MyListCellRenderer();
+    public  LocationDescriptionDialog locationDescriptionDialog;
     static{
         Dimension backgroundDimension = new Dimension((MainFrame.screenSize.width * 5) / 6 - 20, (((MainFrame.screenSize.height * 5) / 6) * 2) / 3 );
         userIcon.setSize(USERICON_WIDTH,  USERICON_HEIGHT);
@@ -41,6 +45,7 @@ public class UserSettingsMenu extends SettingsMenu{
         listScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         listScroller.getVerticalScrollBar().setUI(new MyScrollbarUI(App.gradientColor, Color.white));
         listScroller.getVerticalScrollBar().setUnitIncrement(20);
+        listScroller.getHorizontalScrollBar().setUI(new MyScrollbarUI(App.gradientColor, Color.white));
         listScroller.getHorizontalScrollBar().setUnitIncrement(20);
         
         listScroller.setPreferredSize(backgroundDimension);
@@ -48,18 +53,14 @@ public class UserSettingsMenu extends SettingsMenu{
     }
     
     public UserSettingsMenu(){
-
+        locationDescriptionDialog = new LocationDescriptionDialog(this);
         contentPanel = new ColorPanel();
         contentPanel.setPreferredSize(this.getSize());
         contentPanel.setSize(this.getSize());
         
         addUserProfileImage();
-        ViewPort tailView = new ViewPort(App.gradientColor.getMainColor(), App.gradientColor.getSecondaryColor());
-        // JList list = new JList(new String[]{"Ana", "bana"});
-        // tailView.setView(list);
-        // listScroller.add(tailView);
-        // listScroller.revalidate();
-        // listScroller.repaint();
+       
+        
         contentPanel.add(listScroller);
 
         this.add(contentPanel, BorderLayout.CENTER);
@@ -98,16 +99,27 @@ public class UserSettingsMenu extends SettingsMenu{
        
         
         JList <Location> locationList = new JList(visitedLocations.toArray());
-        
-        locationList.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
+        locationList.setOpaque(false);
+        locationList.setCellRenderer(myListCellRenderer);
         locationList.setForeground(Color.ORANGE);
         locationList.setBackground(AppSettingsMenu.PURPLE_COLOR);
         locationList.setSelectionForeground(AppSettingsMenu.PURPLE_COLOR);
         locationList.setSelectionBackground(Color.ORANGE);
-        
+        locationList.addListSelectionListener(new ListSelectionListener() {
+
+            @Override
+            public void valueChanged(ListSelectionEvent arg0) {
+                if (!arg0.getValueIsAdjusting()) {
+                    UserSettingsMenu.this.locationDescriptionDialog.updateLocation(locationList.getSelectedValue());
+                    UserSettingsMenu.this.locationDescriptionDialog.setVisible(true);
+                }
+            }
+        });
         list = locationList;
-       
-        listScroller.setViewportView(list);
+        
+        ViewPort viewPort = new ViewPort(App.gradientColor);
+        viewPort.setView(list);
+        listScroller.setViewportView(viewPort);
         listScroller.revalidate();
         listScroller.repaint();
         contentPanel.revalidate();
