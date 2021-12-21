@@ -7,6 +7,7 @@ import com.tourer.jdbc.Connector;
 import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -49,8 +50,9 @@ public class UserSettingsMenu extends SettingsMenu{
     public final static MyListCellRenderer myListCellRenderer = new MyListCellRenderer();
     public  LocationDescriptionDialog locationDescriptionDialog;
     public static boolean owned = false;
+    public JLabel name;
     static{
-        Dimension backgroundDimension = new Dimension((MainFrame.screenSize.width * 5) / 6 - 20, (((MainFrame.screenSize.height * 5) / 6) * 2) / 3 - 30 );
+        Dimension backgroundDimension = new Dimension((MainFrame.screenSize.width * 5) / 6 - 20, (((MainFrame.screenSize.height * 5) / 6) * 2) / 3 - 120 );
         userIcon.setSize(USERICON_WIDTH,  USERICON_HEIGHT);
         
         listScroller = new JScrollPane();
@@ -196,7 +198,10 @@ public class UserSettingsMenu extends SettingsMenu{
             }
 
         });
-
+        name = new JLabel("");
+        name.setForeground(Color.yellow);
+        name.setFont(new Font(Font.DIALOG, Font.ITALIC, 40));
+        contentPanel.add(name);
         contentPanel.add(listScroller);
         contentPanel.revalidate();
         contentPanel.repaint();
@@ -232,6 +237,7 @@ public class UserSettingsMenu extends SettingsMenu{
 
     public void updateVisited() throws SQLException{
         owned = true;
+        name.setText(Connector.USERNAME);
         this.updateUserProfileImage(Connector.USERNAME);
        
         Vector <Location> visitedLocations = Connector.getVisitedLocations(); 
@@ -271,6 +277,7 @@ public class UserSettingsMenu extends SettingsMenu{
     }
 
     public void showOtherUser(String username) throws SQLException{
+        name.setText(username);
         owned = false;
         this.updateUserProfileImage(username);
         
