@@ -8,7 +8,7 @@ public class UsserButton extends CostumButton{
     public final static String iconPath = "Icons\\UserIcon.png";
     public final static String darkIconPath = "Icons\\UserIconDark.png";
 
-    static UserSettingsMenu userSettingsMenu;
+    public static UserSettingsMenu userSettingsMenu;
 
     public  UsserButton(int w, int h, UserSettingsMenu userSettingsMenu) {
         super(w, h, UsserButton.iconPath);

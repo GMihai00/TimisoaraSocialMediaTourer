@@ -161,6 +161,7 @@ public class AppSettingsMenu extends SettingsMenu{
         ButtonSettings cardUpdateButton = new ButtonSettings(Color.red, Color.yellow, "Update card data", 1);
         cardDataPanel.addLeft(cardUpdateButton);
         securityPanel.add(cardDataPanel);
+        
         ButtonSettings.cardPanel.add(windowPanel, "Window");
         ButtonSettings.cardPanel.add(securityPanel, "Security");
         ButtonSettings.cardLayout.show(ButtonSettings.cardPanel, "Window");

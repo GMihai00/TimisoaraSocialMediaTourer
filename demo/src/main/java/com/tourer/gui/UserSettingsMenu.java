@@ -23,6 +23,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
+
 import java.awt.Image;
 
 public class UserSettingsMenu extends SettingsMenu{
@@ -33,11 +35,13 @@ public class UserSettingsMenu extends SettingsMenu{
     public final static String profileImagePath = "Icons\\DefaultUserProfileImage.jpg";
     public static JLabel userIcon = new JLabel();
     public static JScrollPane listScroller;
+    public  JButton changeUserIconButton;
+    public JButton changeUserBackgroundButton;
     public JList list;
     public final static MyListCellRenderer myListCellRenderer = new MyListCellRenderer();
     public  LocationDescriptionDialog locationDescriptionDialog;
     static{
-        Dimension backgroundDimension = new Dimension((MainFrame.screenSize.width * 5) / 6 - 20, (((MainFrame.screenSize.height * 5) / 6) * 2) / 3 );
+        Dimension backgroundDimension = new Dimension((MainFrame.screenSize.width * 5) / 6 - 20, (((MainFrame.screenSize.height * 5) / 6) * 2) / 3 - 30 );
         userIcon.setSize(USERICON_WIDTH,  USERICON_HEIGHT);
         
         listScroller = new JScrollPane();
@@ -59,11 +63,19 @@ public class UserSettingsMenu extends SettingsMenu{
         contentPanel.setSize(this.getSize());
         
         addUserProfileImage();
-       
-        
+        changeUserIconButton = new JButton();
+        changeUserIconButton.setPreferredSize(new Dimension(100, 30));
+        changeUserIconButton.setText("Picture+");
+        changeUserBackgroundButton = new JButton();
+        changeUserBackgroundButton.setPreferredSize(new Dimension(100, 30));
+        changeUserBackgroundButton.setText("BGround+");
+        contentPanel.add(changeUserIconButton);
+        contentPanel.add(changeUserBackgroundButton);
         contentPanel.add(listScroller);
-
+        contentPanel.revalidate();
+        contentPanel.repaint();
         this.add(contentPanel, BorderLayout.CENTER);
+        
         this.update();
     }
 
@@ -93,7 +105,8 @@ public class UserSettingsMenu extends SettingsMenu{
 
 
     public void updateVisited() throws SQLException{
-
+        changeUserBackgroundButton.setVisible(true);
+        changeUserIconButton.setVisible(true);
         Vector <Location> visitedLocations = Connector.getVisitedLocations(); 
 
        
@@ -124,5 +137,45 @@ public class UserSettingsMenu extends SettingsMenu{
         listScroller.repaint();
         contentPanel.revalidate();
         contentPanel.repaint();
+        this.update();
+    }
+
+    public void showOtherUser(String username) throws SQLException{
+        changeUserBackgroundButton.setVisible(false);
+        changeUserIconButton.setVisible(false);
+
+        //upload other user profile picture and so on
+        Vector <Location> visitedLocations = Connector.getOtherVisitedLocations(username); 
+
+       
+        
+        JList <Location> locationList = new JList(visitedLocations.toArray());
+        locationList.setOpaque(false);
+        locationList.setCellRenderer(myListCellRenderer);
+        locationList.setForeground(Color.ORANGE);
+        locationList.setBackground(AppSettingsMenu.PURPLE_COLOR);
+        locationList.setSelectionForeground(AppSettingsMenu.PURPLE_COLOR);
+        locationList.setSelectionBackground(Color.ORANGE);
+        locationList.addListSelectionListener(new ListSelectionListener() {
+
+            @Override
+            public void valueChanged(ListSelectionEvent arg0) {
+                if (!arg0.getValueIsAdjusting()) {
+                    UserSettingsMenu.this.locationDescriptionDialog.updateLocation(locationList.getSelectedValue());
+                    UserSettingsMenu.this.locationDescriptionDialog.setVisible(true);
+                }
+            }
+        });
+        list = locationList;
+        
+        ViewPort viewPort = new ViewPort(App.gradientColor);
+        viewPort.setView(list);
+        listScroller.setViewportView(viewPort);
+        listScroller.revalidate();
+        listScroller.repaint();
+        contentPanel.revalidate();
+        contentPanel.repaint();
+        this.update();
+        this.setVisible(true);
     }
 }

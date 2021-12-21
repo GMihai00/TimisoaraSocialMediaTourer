@@ -4,11 +4,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Frame;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import com.tourer.jdbc.Connector;
 
 
 public class CardDataDialog extends JDialog{
@@ -37,7 +42,9 @@ public class CardDataDialog extends JDialog{
         label2.setForeground(Color.orange);
         label2.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         contentPane.addLeft(label2);
-        contentPane.addRight(new JTextField());
+        JTextField cardNumberTextField = new JTextField();
+        cardNumberTextField.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+        contentPane.addRight(cardNumberTextField);
         contentPane.addSpacer(Box.createVerticalStrut(20));
         JLabel label3 = new JLabel("Expiration date");
         label3.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
@@ -56,8 +63,26 @@ public class CardDataDialog extends JDialog{
         label4.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         label4.setForeground(Color.orange);
         contentPane.addLeft(label4);
-        contentPane.addRight(new JTextField());
+        JTextField securityCodeTextField = new JTextField();
+        securityCodeTextField.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+        contentPane.addRight(securityCodeTextField);
         contentPane.addSpacer(Box.createVerticalStrut(20));
+        JButton updateCardDataButton = new JButton("Updata card data");
+
+        updateCardDataButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String cardType = (String) cardPick.getSelectedItem();
+                String cardNumber = cardNumberTextField.getText();
+                String expriationDate = (String) datePick.getSelectedItem();
+                String securityCode = securityCodeTextField.getText();
+
+                Connector.insertCardData(cardType, cardNumber, expriationDate, securityCode);
+            }
+
+        });
+        contentPane.addRight(updateCardDataButton);
         this.setContentPane(contentPane);
         this.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
         this.setLocationRelativeTo(null);

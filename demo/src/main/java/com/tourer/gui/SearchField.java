@@ -5,12 +5,15 @@ import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.ItemListener;
+import java.awt.event.ItemEvent;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Vector;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 import com.tourer.jdbc.*;
@@ -99,6 +102,28 @@ public class SearchField extends JComboBox<String>{
                             return;
                         }
                     }
+                }
+            }
+        });
+        this.addItemListener(new ItemListener(){
+            public void itemStateChanged(ItemEvent event) {
+                if (event.getStateChange() == ItemEvent.SELECTED) {
+                    
+                    if(SearchField.super.getSelectedIndex() != -1)
+                        if(SearchField.this instanceof UserSearchField){
+                            //System.out.println("selected");
+                            try {
+                                UsserButton.userSettingsMenu.showOtherUser((String) SearchField.super.getSelectedItem());
+                                
+                            } catch (SQLException e) {
+                                JOptionPane.showMessageDialog(UsserButton.userSettingsMenu, "Couldn't load user: " +  SearchField.super.getSelectedItem() , "ERROR", JOptionPane.ERROR_MESSAGE);
+                                
+                            }
+                        }
+                        else
+                        if(SearchField.this instanceof LocationSearchField){
+                            //System.out.print("selected2");
+                        }
                 }
             }
         });

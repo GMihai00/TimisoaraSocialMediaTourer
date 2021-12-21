@@ -20,9 +20,10 @@ import java.sql.Connection;
 public class Connector {
     
     public static Pattern ALREADY_IN_USE_USERNAME = Pattern.compile("Duplicate entry '.+' for key 'userprofile.username'");
-    public static String ERROR_DUBLICATE_USERNAME = "User already exist with given username";
+    public final static String ERROR_DUBLICATE_USERNAME = "User already exist with given username";
     public static Pattern ALREADY_IN_USE_EMAIL = Pattern.compile("Duplicate entry '.+' for key 'userprofile.email'");
-    public static String ERROR_DUBLICATE_EMAIL = "User already exist with given email";
+    public final static String ERROR_DUBLICATE_EMAIL = "User already exist with given email";
+    public final static String ERROR_CARD_UPDATE = "Couldn't load card data";
     public static Connection connector;
     public static Statement statement;
     public static Integer USERID;
@@ -188,6 +189,47 @@ public class Connector {
         
         return locationList;
         
+    }
+
+    public static Vector <Location> getOtherVisitedLocations(String username) throws SQLException{
+        Vector <Location> locationList = new Vector<Location>(); 
+        
+        String query = "SELECT latitude, longitude, description, name FROM  Location WHERE id=( SELECT id FROM UserProfile WHERE username='" + username  +"');";
+
+        ResultSet resultSet = runQuery(query);
+        while(resultSet.next()){
+            
+            String name = resultSet.getString("name");
+            String description = resultSet.getString("description");
+            Double latitude = resultSet.getDouble("latitude");
+            Double longitude = resultSet.getDouble("longitude");
+            locationList.add(new Location(name, description, longitude, latitude));
+        }
+        
+        return locationList;
+        
+    }
+    public static void insertCardData(String cardType, String cardNumber, String expriationDate, String securityCode){
+        String query = "INSERT INTO CreditCard(id, type, number, securityCode, expirationDate) VALUES(" + USERID + ",'" + cardType + "'," + cardNumber + "," + securityCode + ",STR_TO_DATE('01/" + expriationDate + "', '%d/%m/%Y')" + ");";
+       
+        try {
+            runUpdate(query);
+        } catch (SQLException e) {
+            updateCardData(cardType, cardNumber, expriationDate, securityCode);
+            
+        }
+
+    }
+
+    public static void updateCardData(String cardType, String cardNumber, String expriationDate, String securityCode){
+        String query = "UPDATE CreditCard SET type='" + cardType + "',number=" + cardNumber + ",expirationDate=STR_TO_DATE('01/" + expriationDate + "', '%d/%m/%Y')" + ",securityCode=" + securityCode + " WHERE id=" + USERID + ";";
+       
+        try {
+            runUpdate(query);
+        } catch (SQLException e) {
+            
+            JOptionPane.showMessageDialog(App.accountCreationFrame, ERROR_CARD_UPDATE, "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
 }
