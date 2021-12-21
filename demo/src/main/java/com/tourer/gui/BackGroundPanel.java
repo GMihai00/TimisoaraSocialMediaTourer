@@ -12,6 +12,15 @@ public class BackGroundPanel extends JPanel{
         this.img = img;
     }
 
+    public Image getImg() {
+        return this.img;
+    }
+
+    public void setImg(Image img) {
+        this.img = img;
+    }
+
+
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);

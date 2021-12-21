@@ -27,6 +27,7 @@ public class Connector {
     public static Connection connector;
     public static Statement statement;
     public static Integer USERID;
+    public static String USERNAME;
     public static void Connect(String url, String user, String password) throws SQLException{
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -68,7 +69,7 @@ public class Connector {
         ResultSet resultSet = runQuery(query);
         if (!resultSet.next())
             return false;
-
+        USERNAME = username;
         USERID = resultSet.getInt("id");
         return true;
     }
@@ -110,7 +111,7 @@ public class Connector {
     public static Vector <String> getUserList(String username) throws SQLException{
         Vector <String> rez = new Vector <String>();
 
-        String query = "SELECT username FROM UserProfile WHERE username REGEXP '" + username + "' ORDER BY username LIMIT 10";
+        String query = "SELECT username FROM UserProfile WHERE username REGEXP '" + username + "' AND id!=" + USERID + " ORDER BY username LIMIT 10";
         ResultSet resultSet = runQuery(query);
         while(resultSet.next()){
             String name = resultSet.getString("username");
@@ -133,7 +134,7 @@ public class Connector {
         return rez;
     }
 
-    public static boolean createLocation(int latitude, int longitude, String name, String description) throws SQLException{
+    public static boolean createLocation(double latitude, double longitude, String name, String description) throws SQLException{
         String query = "INSERT INTO Location(id, latitude, longitude, description, name) VALUES (" + Connector.USERID + "," + latitude + "," + longitude + ",'" + description + "','" + name  + "');";
 
         try {
@@ -158,7 +159,7 @@ public class Connector {
         return true;
     }
 
-    public static boolean modifyLocation(int latitude, int longitude, String name, String description){
+    public static boolean modifyLocation(double latitude, double longitude, String name, String description){
         String query = "UPDATE Location SET name='" + name + "', description='" + description  +"' WHERE id="+ Connector.USERID +" AND latitude="+ latitude +" AND longitude="+ longitude +";";
 
         try {
