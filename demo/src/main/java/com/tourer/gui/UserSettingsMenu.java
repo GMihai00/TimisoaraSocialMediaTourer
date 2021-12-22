@@ -260,6 +260,9 @@ public class UserSettingsMenu extends SettingsMenu{
                     UserSettingsMenu.this.locationDescriptionDialog.descriptionTextArea.setEditable(true);
                     UserSettingsMenu.this.locationDescriptionDialog.updateLocation.setVisible(true);
                     UserSettingsMenu.this.locationDescriptionDialog.setVisible(true);
+
+                    
+                    
                 }
             }
         });

@@ -62,7 +62,8 @@ public class App extends Application
     static String logoPath = "C:\\Java\\PI\\demo\\Icons\\Logo.jpg";
     static String errorPath = "C:\\Java\\PI\\demo\\Icons\\Error.png";
     static final ImageIcon errorIcon = new ImageIcon(new ImageIcon(errorPath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-    
+    public static WebEngine engine;
+    public static WebView view;
     public static MainFrame mainFrame = new MainFrame(gradientColor);
     static{
         mainFrame.setVisible(false);
@@ -132,9 +133,12 @@ public class App extends Application
             @Override
             public void run()
                 {
-                    WebEngine engine;
-                    WebView view = new WebView();
+                    
+                    
+                    view = new WebView();
                     engine = view.getEngine();
+                    engine.setJavaScriptEnabled(true);
+                    engine.setUserAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 Chrome/44.0.2403.155 Safari/537.36");
                     fxpanel.setScene(new Scene(view));
                     engine.load("file:///C:\\Java\\PI\\demo\\JavaScript\\test.html");
                 

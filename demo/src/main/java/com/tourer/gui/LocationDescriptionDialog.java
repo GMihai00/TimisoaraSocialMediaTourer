@@ -6,6 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
 import com.tourer.App;
@@ -17,6 +18,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
 public class LocationDescriptionDialog extends JDialog{
@@ -66,8 +68,29 @@ public class LocationDescriptionDialog extends JDialog{
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(Connector.modifyLocation( location.getLatitude(), location.getlongitude(), location.getName(), descriptionTextArea.getText()) == false){
-                    JOptionPane.showMessageDialog(UsserButton.userSettingsMenu, "Failed to update location", "ERROR", JOptionPane.ERROR_MESSAGE);
+
+                JTextField nameTextField = new JTextField();
+                nameTextField.setText(location.getName());
+                Object[] message = {
+                    "New name:", nameTextField
+                };
+                int result = JOptionPane.showConfirmDialog(LocationDescriptionDialog.this, message, "Save changes", JOptionPane.OK_CANCEL_OPTION);
+
+                if(result == JOptionPane.OK_OPTION){
+                    if(Connector.modifyLocation( location.getLatitude(), location.getlongitude(), nameTextField.getText(), descriptionTextArea.getText()) == false){
+                        JOptionPane.showMessageDialog(UsserButton.userSettingsMenu, "Failed to update location", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    }
+                    else
+                    {
+                        UsserButton.userSettingsMenu.setVisible(false);
+                        try {
+                            UsserButton.userSettingsMenu.updateVisited();
+                        } catch (SQLException e2) {
+                            // TODO Auto-generated catch block
+                            e2.printStackTrace();
+                        }
+                        UsserButton.userSettingsMenu.setVisible(true);
+                    }
                 }
                 
             }
@@ -77,6 +100,8 @@ public class LocationDescriptionDialog extends JDialog{
         
 
         updateLocation.setVisible(false);
+
+
         this.add(updateLocation);
         
     }

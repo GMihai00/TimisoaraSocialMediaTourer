@@ -1,31 +1,105 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<html>
+  <head>
+    <title>Add Map</title>
 
-    <style>
-        #container{
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #map{
-            height: 80vh;
-            width: 80vw;
-        }
-        html, body{
-            margin: 0;
-            padding: 0;
-        }
+    <style type="text/css">
+      /* Set the size of the div element that contains the map */
+      #map {
+        height: 800px;
+        /* The height is heihgt of the web page */
+        width: 100%;
+        /* The width is the width of the web page */
+      }
     </style>
-</head>
-<body>
-    <iframe width="1600" height="800" style="border:0" loading="lazy"  allowfullscreen src="https://www.google.com/maps/embed/v1/place?zoom=11&center=45.7489%2C21.2087&key=AIzaSyCqAeOnRkRu6zylBXyMP0ilbvspn_pT5tE&maptype=satellite&q=Timisoara"></iframe>
-    </iframe>
-</body>
-</html>
+    <script language="javascript">
+      // Initialize and add the map
+        var markertoremove = null;
+        var markers = [];
+        var locationlat = 0.0;
+        var locationlng = 0.0;
+        const timisoara = { lat: 45.75372, lng: 21.22571 };
+        function initMap() {
+            // The location of Timisoara
+            
+            // The map, centered at Timisoara
+            
+            var map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 14,
+                center: timisoara,
+                mapTypeControl: false,
+                streetViewControl: false,
+                mapTypeId: 'hybrid'
+            });
+            
+            //Add click listener to map
+            google.maps.event.addListener(map, 'rightclick', 
+            function(event){
+                //add marker to map
+                if(markertoremove != null)
+                    markertoremove.setMap(null);
+                
+                locationlat = event.latLng.lat();
+                locationlng = event.latLng.lng();
+                addMarker(event.latLng);
+            });
+            // google.maps.event.addListener(map, 'click', 
+            // function(event){
+            //     if(markertoremove != null)
+            //         commitMarker('<h1>commited</h1>');
+                
+            // });
+            function addMarker(location){
 
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                
+                });
+                markertoremove = marker;
+            }
+            
+            function commitMarker(content){
+              var infoWindow = new google.maps.InfoWindow({
+                  content: content
+              });
+              
+              markertoremove.addListener('click', function(){
+                  infoWindow.open(map, this);
+                  
+                  //alert(content);
+              });
+            
+              markers.push(markertoremove);
+              markertoremove = null;
+            }
+
+            
+            
+        }
+        function getLocationOfCommit(){
+              return {lat: locationlat, lng: locationlng};
+              
+        }
+
+        function commitMarker(){
+        
+            markers.push(markertoremove);
+            markertoremove = null;
+        }
+        
+
+    </script>
+  </head>
+  <body>
+    
+    <!--The div element for the map -->
+    <div id="map"></div>
+
+    <!-- Async script executes immediately and must be after any DOM elements used in callback. -->
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCqAeOnRkRu6zylBXyMP0ilbvspn_pT5tE&callback=initMap&libraries=&v=weekly"
+      async
+    ></script>
+  </body>
+</html>

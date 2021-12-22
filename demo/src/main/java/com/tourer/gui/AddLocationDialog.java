@@ -30,12 +30,17 @@ public class AddLocationDialog extends JDialog{
     public static JTextArea locationDescritpionTextField = new JTextArea("");
     static{
         longitude.setForeground(Color.orange);
+        longitude.setPreferredSize(new Dimension((int) MainFrame.screenSize.getWidth() / 3 - 80, 20));
         latitude.setForeground(Color.orange);
+        latitude.setPreferredSize(new Dimension((int) MainFrame.screenSize.getWidth() / 3 - 80, 20));
         locationNameLabel.setForeground(Color.orange);
+        
         locationDescriptionLabel.setForeground(Color.orange);
+        locationDescriptionLabel.setPreferredSize(new Dimension((int) MainFrame.screenSize.getWidth() / 3 - 80, 20));
+        locationNameTextField.setPreferredSize(new Dimension((int) MainFrame.screenSize.getWidth() / 6, 20));
         locationNameTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
         locationDescritpionTextField.setBorder(AccountCreationFrame.BLACK_BORDER);
-        
+        locationDescritpionTextField.setPreferredSize(new Dimension((int) MainFrame.screenSize.getWidth() / 3 - 80, 70));
 
         longitude.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         latitude.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
@@ -48,25 +53,26 @@ public class AddLocationDialog extends JDialog{
         
         this.setSize(new Dimension((int) MainFrame.screenSize.getWidth() / 3, (int) MainFrame.screenSize.getHeight() / 3));
 
-        GridPanel contentPane = new GridPanel();
+        ColorPanel contentPane = new ColorPanel();
         contentPane.setSize(new Dimension((int) MainFrame.screenSize.getWidth() / 3, (int) MainFrame.screenSize.getHeight() / 3));
-        contentPane.addLeft(longitude);
-        contentPane.addRight(latitude);
+        contentPane.add(longitude);
+       
+        contentPane.add(latitude);
         
-        contentPane.addLeft(locationNameLabel);
-        contentPane.addRight(locationNameTextField);
+        contentPane.add(locationNameLabel);
+        contentPane.add(locationNameTextField);
         
-        contentPane.addLeft(locationDescriptionLabel);
+        contentPane.add(locationDescriptionLabel);
         JScrollPane scrollPane = new JScrollPane(locationDescritpionTextField);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);  
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);  
-        scrollPane.setPreferredSize(new Dimension((int) MainFrame.screenSize.getWidth() / 6, (int) MainFrame.screenSize.getHeight() / 7));
+        //scrollPane.setPreferredSize(new Dimension((int) MainFrame.screenSize.getWidth() / 6, (int) MainFrame.screenSize.getHeight() / 7));
         GridBagConstraints c = new GridBagConstraints();
         c.weightx = 1;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
         contentPane.add(scrollPane, c);
-        contentPane.addSpacer(Box.createHorizontalStrut(1));
+        contentPane.add(Box.createHorizontalStrut(1));
         JButton addButton = new JButton("Add");
         addButton.addActionListener(new ActionListener(){
 
@@ -96,7 +102,7 @@ public class AddLocationDialog extends JDialog{
             }
 
         });
-        contentPane.addLeft(addButton);
+        contentPane.add(addButton);
         this.setContentPane(contentPane);
 
 

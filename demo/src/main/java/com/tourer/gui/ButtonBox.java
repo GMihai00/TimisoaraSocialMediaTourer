@@ -1,8 +1,16 @@
 package com.tourer.gui;
 
 import java.awt.Component;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
+
+import com.tourer.App;
+
+import javafx.application.Platform;
 
 public class ButtonBox extends Box{
 
@@ -29,6 +37,28 @@ public class ButtonBox extends Box{
         
         SettingsButton settingsButton = new SettingsButton(ButtonBox.buttonWidth,  ButtonBox.buttonHeight, appMenuSettings);
         this.addWithSpacer(settingsButton, ButtonBox.buttonWidth / 2);
+
+        JButton reloadButton = new JButton("Reload");
+        reloadButton.setSize(ButtonBox.buttonWidth,  ButtonBox.buttonHeight);
+        reloadButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Platform.runLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        // TODO Auto-generated method stub
+                        App.engine.reload();
+                    }
+                    
+                });
+                
+                
+            }
+
+        });
+        this.addWithSpacer(reloadButton, ButtonBox.buttonWidth / 2);
     }
     public void addWithSpacer(Component comp, int size){
         this.add(comp);
