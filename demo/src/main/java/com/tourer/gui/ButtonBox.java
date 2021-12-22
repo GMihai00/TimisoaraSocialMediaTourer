@@ -38,26 +38,8 @@ public class ButtonBox extends Box{
         SettingsButton settingsButton = new SettingsButton(ButtonBox.buttonWidth,  ButtonBox.buttonHeight, appMenuSettings);
         this.addWithSpacer(settingsButton, ButtonBox.buttonWidth / 2);
 
-        JButton reloadButton = new JButton("Reload");
-        reloadButton.setSize(ButtonBox.buttonWidth,  ButtonBox.buttonHeight);
-        reloadButton.addActionListener(new ActionListener(){
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                Platform.runLater(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        // TODO Auto-generated method stub
-                        App.engine.reload();
-                    }
-                    
-                });
-                
-                
-            }
-
-        });
+        ReloadButton reloadButton = new ReloadButton(ButtonBox.buttonWidth,  ButtonBox.buttonHeight);
+        
         this.addWithSpacer(reloadButton, ButtonBox.buttonWidth / 2);
     }
     public void addWithSpacer(Component comp, int size){

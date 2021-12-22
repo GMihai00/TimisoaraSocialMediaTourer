@@ -1,7 +1,12 @@
 package com.tourer.jdbc;
 
 import javax.mail.PasswordAuthentication;
+
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Properties;
+import java.util.Scanner;
+
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -37,11 +42,27 @@ public class MailSender {
     private static Message createMessage(String recipient) {
        
         try {
+            String template = "Hello, thank you for creating a new account for Timisoara Tourer\nWe hope that the app will give you a better look of Timisoara and you'll enjoy using it\n";
+            try {
+                StringBuilder stringBuilder = new StringBuilder("");
+                File myObj = new File("Email\\Template.mail.html");
+                Scanner myReader = new Scanner(myObj);
+                while (myReader.hasNextLine()) {
+                    String data = myReader.nextLine();
+                    stringBuilder.append(data);
+                }
+                myReader.close();
+                template = stringBuilder.toString();
+                } catch (FileNotFoundException e) {
+                    
+                    e.printStackTrace();
+                }
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(MAIL));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(recipient));
             message.setSubject("New account for Timisoara Tourer");
-            message.setText("Hello, thank you for creating a new account for Timisoara Tourer\nWe hope that the app will give you a better look of Timisoara and you'll enjoy using it\n");
+            message.setContent(template, "text/html; charset=utf-8");
+
             return message;
         } catch (MessagingException e) {
             // TODO Auto-generated catch block

@@ -116,8 +116,7 @@ public class App extends Application
         LocationSearchField locationSearchField = new LocationSearchField();
         searchPanel.add(locationSearchField);
         UserSearchField userSearchField = new UserSearchField();
-        userSearchField.addItem("Ana");
-        userSearchField.addItem("Andreea");
+        
         searchPanel.setSize(new Dimension(MainFrame.screenSize.width, 50));
         searchPanel.add(userSearchField);
 
