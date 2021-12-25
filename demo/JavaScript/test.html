@@ -15,14 +15,18 @@
     <script language="javascript">
       // Initialize and add the map
         var markertoremove = null;
+        var targetmarker =  null ;
         var markers = [];
         var locationlat = 0.0;
         var locationlng = 0.0;
         const timisoara = { lat: 45.75372, lng: 21.22571 };
         function initMap() {
+          
             // The location of Timisoara
             
             // The map, centered at Timisoara
+
+            
             if(markertoremove != null){
               
               markers.push(markertoremove.position);
@@ -34,6 +38,10 @@
                 streetViewControl: false,
                 mapTypeId: 'hybrid'
             });
+            if(targetmarker != null){
+                addTargetMarker(targetmarker);
+                targetmarker = null;
+            }
             for(var i = 0; i < markers.length; i++){
               addMarker(markers[i]);
               
@@ -60,7 +68,16 @@
                 });
                 markertoremove = marker;
             }
- 
+            function addTargetMarker(target){
+
+              var marker = new google.maps.Marker({
+                position: target,
+                map: map,
+                icon:'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+                scaledSize: new google.maps.Size(200, 200)
+              });
+              
+            }
             
         }
         function getLocationOfCommit(){
@@ -68,6 +85,17 @@
               
         }
 
+        function resetTargetMarker(){
+          targetmarker = null;
+          initMap();
+        }
+
+        function setTargetMarker(lat, lng){
+          markertoremove = null;
+          targetmarker = {lat : lat, lng : lng};
+          initMap();
+        }
+        
         
         
 

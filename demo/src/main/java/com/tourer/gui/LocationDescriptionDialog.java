@@ -13,6 +13,9 @@ import com.tourer.App;
 import com.tourer.gui.map.Location;
 import com.tourer.jdbc.Connector;
 
+import javafx.application.Platform;
+import netscape.javascript.JSObject;
+
 import java.awt.Window;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -61,7 +64,25 @@ public class LocationDescriptionDialog extends JDialog{
         this.add(textScrollPane);
 
         JButton showOnMapButton = new JButton("Show on Map");
-       
+        showOnMapButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Platform.runLater(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Double lat = location.getLatitude();
+                        Double lng = location.getlongitude();
+                        App.engine.executeScript("setTargetMarker(" + lat + ", " + lng + ");");
+                        App.mainFrame.requestFocus();
+                    }
+                });
+               
+
+            }
+        });
+        //setTargetMarker
         this.add(showOnMapButton);
         updateLocation = new JButton("Update location");
         updateLocation.addActionListener(new ActionListener(){
