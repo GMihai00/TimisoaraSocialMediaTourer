@@ -3,26 +3,23 @@ package com.tourer.gui;
 import javax.swing.JSlider;
 import javax.swing.plaf.basic.BasicSliderUI;
 
-import java.awt.Dimension;
+
 import java.awt.Shape;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
+
 import java.awt.Graphics;
 import java.awt.Color;
-import java.awt.RenderingHints;
-import java.awt.LinearGradientPaint;
-import java.awt.geom.Point2D;
-import java.awt.geom.Ellipse2D;
+
+
 import java.awt.geom.RoundRectangle2D;
 public class MySliderUI extends BasicSliderUI {
 
     private static final int TRACK_HEIGHT = 8;
     private static final int TRACK_WIDTH = 8;
     private static final int TRACK_ARC = 5;
-    private static final Dimension THUMB_SIZE = new Dimension(20, 20);
+   
     private final RoundRectangle2D.Float trackShape = new RoundRectangle2D.Float();
-    private static float[] fracs = {0.0f, 1.0f};
-    private LinearGradientPaint p;
+
 
     public MySliderUI(JSlider slider) {
         super(slider);

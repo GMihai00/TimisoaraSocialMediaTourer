@@ -2,11 +2,12 @@ package com.tourer;
 
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.io.File;
+import java.util.concurrent.FutureTask;
 
 import java.awt.Toolkit;
 import java.awt.Image;
-import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.BorderLayout;
@@ -17,10 +18,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.sql.SQLException;
 
 import javax.imageio.ImageIO;
@@ -52,6 +50,10 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.application.Application;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 //"vmArgs": "--module-path C:\\Java\\JavaFX\\javafx-sdk-17.0.1\\lib --add-modules javafx.controls,javafx.fxml",
 
@@ -95,53 +97,64 @@ public class App extends Application
 
     public static ButtonBox buttonBox;
     public static void initAndShowGUI(){
-        Dimension buttonMenuDim = new Dimension(150, MainFrame.screenSize.height - 50);
-        String menuBackgroundPath = "Icons\\MainSideMenuBackground.jpg";
-        Image menuBackground = Toolkit.getDefaultToolkit().getImage(menuBackgroundPath);
-        try {
-            BufferedImage bufferedImage = ImageIO.read(new File(menuBackgroundPath));
-            menuBackground  = bufferedImage.getScaledInstance(150, MainFrame.screenSize.height - 50, Image.SCALE_SMOOTH);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
         
-        ColorPanel menu = new ColorPanel();
-        menu.setSize(buttonMenuDim);
-        menu.setPreferredSize(buttonMenuDim);
-        menu.setMaximumSize(buttonMenuDim);
-        menu.setMinimumSize(buttonMenuDim);
-        ColorPanel searchPanel = new ColorPanel();
-        searchPanel.setLayout(new CardLayout());
-        LocationSearchField locationSearchField = new LocationSearchField();
-        searchPanel.add(locationSearchField);
-        UserSearchField userSearchField = new UserSearchField();
         
-        searchPanel.setSize(new Dimension(MainFrame.screenSize.width, 50));
-        searchPanel.add(userSearchField);
-
-        buttonBox = new ButtonBox(locationSearchField, userSearchField);
         
-        JFXPanel fxpanel = new JFXPanel();
-        menu.add(buttonBox);
-        mainFrame.add(searchPanel, BorderLayout.NORTH);
-        mainFrame.add(menu, BorderLayout.WEST);
-        mainFrame.add(fxpanel, BorderLayout.CENTER);
-
-        Platform.runLater(new Runnable() {
+        runAndWait(new Runnable() {
             @Override
             public void run()
                 {
-                    
-                    
+                    JFXPanel fxpanel = new JFXPanel();
                     view = new WebView();
                     engine = view.getEngine();
+                    engine.getCreatePopupHandler();
                     engine.setJavaScriptEnabled(true);
                     engine.setUserAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 Chrome/44.0.2403.155 Safari/537.36");
-                    fxpanel.setScene(new Scene(view));
+                    Scene scene = new Scene(view);
+                    fxpanel.setScene(scene);
                     engine.load("file:///C:\\Java\\PI\\demo\\JavaScript\\test.html");
-                
-                    mainFrame.add(fxpanel, BorderLayout.CENTER);
+                    
+                    fxpanel.revalidate();
+                    fxpanel.revalidate();
+                    try {
+                        SwingUtilities.invokeAndWait(new Runnable() {
+                            @Override
+                            public void run() {
+                                mainFrame.getContentPane().add(fxpanel, BorderLayout.CENTER);
+                                Dimension buttonMenuDim = new Dimension(150, MainFrame.screenSize.height - 50);
+            
+            
+                                ColorPanel menu = new ColorPanel();
+                                menu.setSize(buttonMenuDim);
+                                menu.setPreferredSize(buttonMenuDim);
+                                menu.setMaximumSize(buttonMenuDim);
+                                menu.setMinimumSize(buttonMenuDim);
+                                ColorPanel searchPanel = new ColorPanel();
+                                searchPanel.setLayout(new CardLayout());
+                                LocationSearchField locationSearchField = new LocationSearchField();
+                                searchPanel.add(locationSearchField);
+                                UserSearchField userSearchField = new UserSearchField();
+                                
+                                searchPanel.setSize(new Dimension(MainFrame.screenSize.width, 50));
+                                searchPanel.add(userSearchField);
+      
+                                buttonBox = new ButtonBox(locationSearchField, userSearchField);
+                                
+                                
+                                menu.add(buttonBox);
+                                mainFrame.add(searchPanel, BorderLayout.NORTH);
+                                mainFrame.add(menu, BorderLayout.WEST);
+      
+                                mainFrame.pack();
+                                mainFrame.revalidate();
+                                mainFrame.repaint();
+                            }
+                        });
+                    } catch (InvocationTargetException | InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                    
                 }
         });
 
@@ -305,13 +318,24 @@ public class App extends Application
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                initAndShowGUI();
-            }
-        });
+        initAndShowGUI();
         
+        
+    }
+
+    public static void runAndWait(Runnable runnable) {
+        try {/* ww  w . j a v a  2s .  c  o m*/
+            if (Platform.isFxApplicationThread()) {
+                runnable.run();
+            } else {
+                FutureTask<Object> futureTask = new FutureTask<>(runnable,
+                        null);
+                Platform.runLater(futureTask);
+                futureTask.get();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
    

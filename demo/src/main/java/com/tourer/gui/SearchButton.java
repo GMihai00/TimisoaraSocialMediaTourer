@@ -3,7 +3,6 @@ package com.tourer.gui;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JTextField;
 public class SearchButton extends CostumButton{
 
     public final static String iconPath = "Icons\\Search.png";

@@ -1,6 +1,5 @@
 package com.tourer.gui;
 
-import java.lang.Math;
 
 import java.awt.Component;
 import java.awt.Container;

@@ -1,16 +1,10 @@
 package com.tourer.gui;
 
 import java.awt.Component;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 
-import com.tourer.App;
-
-import javafx.application.Platform;
 
 public class ButtonBox extends Box{
 

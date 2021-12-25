@@ -1,6 +1,6 @@
 package com.tourer.gui;
 
-import javax.swing.JPanel;
+
 
 import java.awt.Component;
 import java.awt.GridBagLayout;

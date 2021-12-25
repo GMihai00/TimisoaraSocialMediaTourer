@@ -23,7 +23,10 @@
             // The location of Timisoara
             
             // The map, centered at Timisoara
-            
+            if(markertoremove != null){
+              
+              markers.push(markertoremove.position);
+            }
             var map = new google.maps.Map(document.getElementById("map"), {
                 zoom: 14,
                 center: timisoara,
@@ -31,7 +34,11 @@
                 streetViewControl: false,
                 mapTypeId: 'hybrid'
             });
-            
+            for(var i = 0; i < markers.length; i++){
+              addMarker(markers[i]);
+              
+            }
+            markertoremove = null;
             //Add click listener to map
             google.maps.event.addListener(map, 'rightclick', 
             function(event){
@@ -43,12 +50,7 @@
                 locationlng = event.latLng.lng();
                 addMarker(event.latLng);
             });
-            // google.maps.event.addListener(map, 'click', 
-            // function(event){
-            //     if(markertoremove != null)
-            //         commitMarker('<h1>commited</h1>');
-                
-            // });
+            
             function addMarker(location){
 
                 var marker = new google.maps.Marker({
@@ -58,23 +60,7 @@
                 });
                 markertoremove = marker;
             }
-            
-            function commitMarker(content){
-              var infoWindow = new google.maps.InfoWindow({
-                  content: content
-              });
-              
-              markertoremove.addListener('click', function(){
-                  infoWindow.open(map, this);
-                  
-                  //alert(content);
-              });
-            
-              markers.push(markertoremove);
-              markertoremove = null;
-            }
-
-            
+ 
             
         }
         function getLocationOfCommit(){
@@ -82,11 +68,7 @@
               
         }
 
-        function commitMarker(){
         
-            markers.push(markertoremove);
-            markertoremove = null;
-        }
         
 
     </script>
