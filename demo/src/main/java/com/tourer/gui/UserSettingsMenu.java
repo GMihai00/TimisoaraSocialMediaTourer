@@ -352,6 +352,21 @@ public class UserSettingsMenu extends SettingsMenu{
                 backGroundPanel.setImg(profileImage);
             }
             else
+            if((new File("UserPhotos\\" + username + "\\Background.jpeg")).exists())
+            {
+                String profileImagePath = "UserPhotos\\" + username + "\\Background.jpeg";
+                Image profileImage = Toolkit.getDefaultToolkit().getImage(profileImagePath);
+                Dimension backgroundDimension = new Dimension((int) this.getSize().getWidth(),(int) this.getSize().getHeight() / 3);
+                try {
+                    BufferedImage bufferedImage = ImageIO.read(new File(profileImagePath));
+                    profileImage  = bufferedImage.getScaledInstance((int)backgroundDimension.getWidth(),(int) backgroundDimension.getHeight(), Image.SCALE_SMOOTH);
+                } catch (IOException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+                backGroundPanel.setImg(profileImage);
+            }
+            else
             {
                 Image profileImage = Toolkit.getDefaultToolkit().getImage(defaultProfileImagePath);
                 Dimension backgroundDimension = new Dimension((int) this.getSize().getWidth(),(int) this.getSize().getHeight() / 3);
@@ -374,6 +389,13 @@ public class UserSettingsMenu extends SettingsMenu{
             if((new File("UserPhotos\\" + username + "\\ProfilePicture.png")).exists())
             {
                 String iconPath = "UserPhotos\\" + username + "\\ProfilePicture.png";
+                ImageIcon icon = new ImageIcon(new ImageIcon(iconPath).getImage().getScaledInstance(USERICON_WIDTH, USERICON_HEIGHT, Image.SCALE_SMOOTH));
+                userIcon.setIcon(icon);
+            }
+            else
+            if((new File("UserPhotos\\" + username + "\\ProfilePicture.jpeg")).exists())
+            {
+                String iconPath = "UserPhotos\\" + username + "\\ProfilePicture.jpeg";
                 ImageIcon icon = new ImageIcon(new ImageIcon(iconPath).getImage().getScaledInstance(USERICON_WIDTH, USERICON_HEIGHT, Image.SCALE_SMOOTH));
                 userIcon.setIcon(icon);
             }
