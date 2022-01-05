@@ -1,11 +1,12 @@
 package com.tourer;
 
-
+import com.tourer.gui.map.Location;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.io.File;
+import java.util.Vector;
 import java.util.concurrent.FutureTask;
-
+import java.util.concurrent.Semaphore;
 import java.awt.Toolkit;
 import java.awt.Image;
 import java.awt.Dimension;
@@ -55,6 +56,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import netscape.javascript.JSObject;
+
 //"vmArgs": "--module-path C:\\Java\\JavaFX\\javafx-sdk-17.0.1\\lib --add-modules javafx.controls,javafx.fxml",
 
 public class App extends Application 
@@ -67,6 +70,9 @@ public class App extends Application
     public static WebEngine engine;
     public static WebView view;
     public static MainFrame mainFrame = new MainFrame(gradientColor);
+    public static Double currentLatitude;
+    public static Double currentLongitude;
+    public static JFXPanel fxpanel;
     static{
         mainFrame.setVisible(false);
         UIManager.put("OptionPane.errorIcon", errorIcon);
@@ -98,68 +104,128 @@ public class App extends Application
     public static ButtonBox buttonBox;
     public static void initAndShowGUI(){
         
-        
-        
+        Semaphore mutex1 = new Semaphore(0);
+        Semaphore mutex = new Semaphore(1);
         runAndWait(new Runnable() {
             @Override
             public void run()
                 {
-                    JFXPanel fxpanel = new JFXPanel();
-                    view = new WebView();
-                    engine = view.getEngine();
-                    engine.getCreatePopupHandler();
-                    engine.setJavaScriptEnabled(true);
-                    engine.setUserAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 Chrome/44.0.2403.155 Safari/537.36");
-                    Scene scene = new Scene(view);
-                    fxpanel.setScene(scene);
-                    engine.load("file:///C:\\Java\\PI\\demo\\JavaScript\\test.html");
-                    
-                    fxpanel.revalidate();
-                    fxpanel.revalidate();
                     try {
-                        SwingUtilities.invokeAndWait(new Runnable() {
-                            @Override
-                            public void run() {
-                                mainFrame.getContentPane().add(fxpanel, BorderLayout.CENTER);
-                                Dimension buttonMenuDim = new Dimension(150, MainFrame.screenSize.height - 50);
-            
-            
-                                ColorPanel menu = new ColorPanel();
-                                menu.setSize(buttonMenuDim);
-                                menu.setPreferredSize(buttonMenuDim);
-                                menu.setMaximumSize(buttonMenuDim);
-                                menu.setMinimumSize(buttonMenuDim);
-                                ColorPanel searchPanel = new ColorPanel();
-                                searchPanel.setLayout(new CardLayout());
-                                LocationSearchField locationSearchField = new LocationSearchField();
-                                searchPanel.add(locationSearchField);
-                                UserSearchField userSearchField = new UserSearchField();
-                                
-                                searchPanel.setSize(new Dimension(MainFrame.screenSize.width, 50));
-                                searchPanel.add(userSearchField);
-      
-                                buttonBox = new ButtonBox(locationSearchField, userSearchField);
-                                
-                                
-                                menu.add(buttonBox);
-                                mainFrame.add(searchPanel, BorderLayout.NORTH);
-                                mainFrame.add(menu, BorderLayout.WEST);
-      
-                                mainFrame.pack();
-                                mainFrame.revalidate();
-                                mainFrame.repaint();
-                            }
-                        });
-                    } catch (InvocationTargetException | InterruptedException e) {
+                        mutex.acquire();
+                        fxpanel = new JFXPanel();
+                        view = new WebView();
+                        engine = view.getEngine();
+                        engine.getCreatePopupHandler();
+                        engine.setJavaScriptEnabled(true);
+                        engine.setUserAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 Chrome/44.0.2403.155 Safari/537.36");
+                        Scene scene = new Scene(view);
+                        fxpanel.setScene(scene);
+                        engine.load("file:///C:\\Java\\PI\\demo\\JavaScript\\test.html");
+                        
+                        fxpanel.revalidate();
+                        fxpanel.revalidate();
+                        mutex.release(); 
+                        mutex1.release();  
+                    } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
                     
+                    
+                   
+                    
                 }
+
+           
         });
+        try {
+            SwingUtilities.invokeAndWait(new Runnable() {
+                @Override
+                public void run() {
+
+                    
+                    try {
+                        mutex1.acquire();
+                        mutex.acquire();
+                        mainFrame.getContentPane().add(fxpanel, BorderLayout.CENTER);
+                        Dimension buttonMenuDim = new Dimension(150, MainFrame.screenSize.height - 50);
+
+
+                        ColorPanel menu = new ColorPanel();
+                        menu.setSize(buttonMenuDim);
+                        menu.setPreferredSize(buttonMenuDim);
+                        menu.setMaximumSize(buttonMenuDim);
+                        menu.setMinimumSize(buttonMenuDim);
+                        ColorPanel searchPanel = new ColorPanel();
+                        searchPanel.setLayout(new CardLayout());
+                        LocationSearchField locationSearchField = new LocationSearchField();
+                        searchPanel.add(locationSearchField);
+                        UserSearchField userSearchField = new UserSearchField();
+                        
+                        searchPanel.setSize(new Dimension(MainFrame.screenSize.width, 50));
+                        searchPanel.add(userSearchField);
+
+                        buttonBox = new ButtonBox(locationSearchField, userSearchField);
+                        
+                        
+                        menu.add(buttonBox);
+                        mainFrame.add(searchPanel, BorderLayout.NORTH);
+                        mainFrame.add(menu, BorderLayout.WEST);
+
+                        mainFrame.pack();
+                        mainFrame.revalidate();
+                        mainFrame.repaint();
+                        mutex.release(); 
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    } 
+                    
+                    
+                }
+            });
+        } catch (InvocationTargetException | InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
     }
-    
+    public static void reloadMap(){
+
+        runAndWait(new Runnable() {
+
+            @Override
+            public void run() {
+                App.engine.reload();
+        
+                try {
+                    Vector <Location> vLocation = Connector.getVisitedLocations();
+                    
+                    for(int i = 0; i < min(10, vLocation.size()); i++){
+                        Double lat = vLocation.get(i).getLatitude();
+                        Double lng = vLocation.get(i).getlongitude();
+                        
+                        engine.executeScript("addMarkerToList(" + lat + ", " + lng + ");");
+                    }
+                } catch (SQLException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+               
+                
+                App.engine.executeScript("initMap();");
+                // updateCurrentPosition();
+            }
+        });
+        
+       
+    }
+    private static int min(int i, int j) {
+        if(i < j)
+            return i;
+        else
+            return j;
+    }
     public static void main( String[] args ) throws IOException{
         
         try{
@@ -322,7 +388,13 @@ public class App extends Application
         
         
     }
-
+    public static void updateCurrentPosition(){
+        
+        JSObject location = (JSObject) App.engine.executeScript("getCurrentLocation();");
+        currentLatitude =((Double) location.getMember("lat"));
+        currentLongitude =((Double) location.getMember("lng"));
+        System.out.println(currentLatitude + " " + currentLongitude);
+    }
     public static void runAndWait(Runnable runnable) {
         try {/* ww  w . j a v a  2s .  c  o m*/
             if (Platform.isFxApplicationThread()) {

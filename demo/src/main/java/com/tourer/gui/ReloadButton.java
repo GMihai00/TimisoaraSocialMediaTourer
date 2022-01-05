@@ -27,7 +27,8 @@ public class ReloadButton extends CostumButton{
                     @Override
                     public void run() {
                         // TODO Auto-generated method stub
-                        App.engine.reload();
+                        
+                        App.reloadMap();
                     }
                     
                 });
