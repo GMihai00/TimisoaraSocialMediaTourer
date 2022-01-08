@@ -3,6 +3,8 @@ package com.tourer.jdbc;
 import com.tourer.gui.map.Location;
 
 import java.sql.Statement;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,6 +14,7 @@ import javax.swing.JOptionPane;
 import com.tourer.App;
 
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Connection;
@@ -24,6 +27,7 @@ public class Connector {
     public static Pattern ALREADY_IN_USE_EMAIL = Pattern.compile("Duplicate entry '.+' for key 'userprofile.email'");
     public final static String ERROR_DUBLICATE_EMAIL = "User already exist with given email";
     public final static String ERROR_CARD_UPDATE = "Couldn't load card data";
+    public final static String ERROR_LIKE_UPDATE = "Failed to update number of likes";
     public static Connection connector;
     public static Statement statement;
     public static Integer USERID;
@@ -67,10 +71,13 @@ public class Connector {
         String query = "SELECT id from UserProfile WHERE username='" + username + "' AND password='" + password + "'";
         
         ResultSet resultSet = runQuery(query);
-        if (!resultSet.next())
+        if (!resultSet.next()){
+            resultSet.close();
             return false;
+        }
         USERNAME = username;
         USERID = resultSet.getInt("id");
+        resultSet.close();
         return true;
     }
 
@@ -117,8 +124,14 @@ public class Connector {
             String name = resultSet.getString("username");
             rez.add(name);
         }
-        
+        resultSet.close();
         return rez;
+    }
+
+    public static void deleteLocation(String name) throws SQLException{
+        String query = "DELETE from location where id =" + Connector.USERID + " and name = '" + name + "';";
+        PreparedStatement statement = Connector.connector.prepareStatement(query);
+        statement.executeUpdate(); 
     }
 
     public static Vector <String> getLocationList(String name) throws SQLException{
@@ -130,7 +143,7 @@ public class Connector {
             String lname = resultSet.getString("name");
             rez.add(lname);
         }
-        
+        resultSet.close();
         return rez;
     }
 
@@ -176,7 +189,7 @@ public class Connector {
     public static Vector <Location> getVisitedLocations() throws SQLException{
         Vector <Location> locationList = new Vector<Location>(); 
         
-        String query = "SELECT latitude, longitude, description, name FROM  Location WHERE id=" + USERID + ";";
+        String query = "SELECT latitude, longitude, description, likes, dislikes, name FROM  Location WHERE id=" + USERID + ";";
 
         ResultSet resultSet = runQuery(query);
         while(resultSet.next()){
@@ -185,9 +198,13 @@ public class Connector {
             String description = resultSet.getString("description");
             Double latitude = resultSet.getDouble("latitude");
             Double longitude = resultSet.getDouble("longitude");
-            locationList.add(new Location(name, description, longitude, latitude));
+            int likes = resultSet.getInt("likes");
+            int dislikes = resultSet.getInt("dislikes");
+            Set <String> userlikes = new TreeSet<>();
+            Set <String> userdislikes = new TreeSet<>();
+            locationList.add(new Location(name, description, longitude, latitude, likes, dislikes, "", userlikes, userdislikes));
         }
-        
+        resultSet.close();
         return locationList;
         
     }
@@ -195,8 +212,8 @@ public class Connector {
     public static Vector <Location> getOtherVisitedLocations(String username) throws SQLException{
         Vector <Location> locationList = new Vector<Location>(); 
         
-        String query = "SELECT latitude, longitude, description, name FROM  Location WHERE id=( SELECT id FROM UserProfile WHERE username='" + username  +"');";
-
+        String query = "SELECT latitude, longitude, description, likes, dislikes, name FROM  Location WHERE id=( SELECT id FROM UserProfile WHERE username='" + username  +"');";
+        Statement statement2 = connector.createStatement();
         ResultSet resultSet = runQuery(query);
         while(resultSet.next()){
             
@@ -204,9 +221,32 @@ public class Connector {
             String description = resultSet.getString("description");
             Double latitude = resultSet.getDouble("latitude");
             Double longitude = resultSet.getDouble("longitude");
-            locationList.add(new Location(name, description, longitude, latitude));
+            int likes = resultSet.getInt("likes");
+            int dislikes = resultSet.getInt("dislikes");
+            Set <String> userlikes = new TreeSet<>();
+            Set <String> userdislikes = new TreeSet<>();
+
+            
+            String query2 = "SELECT nameother, type from likestate WHERE  id=( SELECT id FROM UserProfile WHERE username='" + username  +"') AND name = '" + name + "';";
+            
+            ResultSet resultSet2 = statement2.executeQuery(query2);
+            
+            while(resultSet2.next()){
+                boolean type = resultSet2.getBoolean("type");
+                String nameother = resultSet2.getString("nameother");
+               
+                if(type == true)
+                    userlikes.add(nameother);
+                else
+                    userdislikes.add(nameother);
+                
+            }
+            resultSet2.close();
+           
+            locationList.add(new Location(name, description, longitude, latitude, likes, dislikes, "", userlikes, userdislikes));
         }
-        
+        statement2.close();
+        resultSet.close();
         return locationList;
         
     }
@@ -233,4 +273,66 @@ public class Connector {
         }
     }
 
+
+    public static void  like(String name, String username, int like){
+        String query = "UPDATE Location SET likes=" + like +  " WHERE id=( SELECT id FROM UserProfile WHERE username='" + username +  "') AND name = '" + name +  "';";
+        try {
+            runUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(App.accountCreationFrame, ERROR_LIKE_UPDATE, "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+    }   
+
+    public static void dislike(String name, String username, int dislike){
+        
+        String query = "UPDATE Location SET dislikes=" + dislike +  " WHERE id=( SELECT id FROM UserProfile WHERE username='" + username + "') AND name = '" + name +  "';";
+        try {
+            runUpdate(query);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(App.accountCreationFrame, ERROR_LIKE_UPDATE, "ERROR", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static Location getFirstLocationByName(String namelocation) throws SQLException{
+        Location location = new Location();
+        String query = "SELECT latitude, longitude, description, likes, dislikes, name FROM  Location WHERE name='" + namelocation  +"' LIMIT 1;";
+        ResultSet resultSet = runQuery(query);
+        if(resultSet.next()){
+            
+            String name = resultSet.getString("name");
+            String description = resultSet.getString("description");
+            Double latitude = resultSet.getDouble("latitude");
+            Double longitude = resultSet.getDouble("longitude");
+            int likes = resultSet.getInt("likes");
+            int dislikes = resultSet.getInt("dislikes");
+            Set <String> userlikes = new TreeSet<>();
+            Set <String> userdislikes = new TreeSet<>();
+            
+            location = new Location(name, description, longitude, latitude, likes, dislikes, "", userlikes, userdislikes);
+            
+        }
+        return location;
+        
+    }
+
+    public static void modifylikeState(String name, String username, boolean type) throws SQLException{
+        
+        String query = "SELECT * FROM likestate WHERE nameother = '" + USERNAME + "' AND type = " + type + " AND name = '" + name + "' AND id = ( SELECT id FROM UserProfile WHERE username='" + username +  "');";
+        
+        String query2 = "";
+        ResultSet resultSet = runQuery(query);
+
+        if(resultSet.next()){
+            query2 = "DELETE FROM likestate WHERE nameother = '" + USERNAME + "' AND type = " + type + " AND name = '" + name + "' AND id = ( SELECT id FROM UserProfile WHERE username='" + username +  "');";
+            
+        }
+        else
+        {
+            query2 = "INSERT INTO likestate(id, name, nameother, type) VALUES (( SELECT id FROM UserProfile WHERE username='" + username +  "'),'" + name + "', '" + USERNAME + "', " + type + "  );";
+        }
+        resultSet.close();
+        runUpdate(query2);
+    }
 }

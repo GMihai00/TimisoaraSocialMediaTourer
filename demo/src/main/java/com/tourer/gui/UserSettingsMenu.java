@@ -257,6 +257,9 @@ public class UserSettingsMenu extends SettingsMenu{
                     UserSettingsMenu.this.locationDescriptionDialog.updateLocation(locationList.getSelectedValue());
                     UserSettingsMenu.this.locationDescriptionDialog.descriptionTextArea.setEditable(true);
                     UserSettingsMenu.this.locationDescriptionDialog.updateLocation.setVisible(true);
+                    UserSettingsMenu.this.locationDescriptionDialog.deleteLocation.setVisible(true);
+                    UserSettingsMenu.this.locationDescriptionDialog.likeButton.setVisible(false);
+                    UserSettingsMenu.this.locationDescriptionDialog.dislikeButton.setVisible(false);
                     UserSettingsMenu.this.locationDescriptionDialog.setVisible(true);
 
                     
@@ -278,7 +281,9 @@ public class UserSettingsMenu extends SettingsMenu{
     }
 
     public void showOtherUser(String username) throws SQLException{
+        
         name.setText(username);
+        LocationDescriptionDialog.username = username;
         owned = false;
         this.updateUserProfileImage(username);
         
@@ -301,8 +306,12 @@ public class UserSettingsMenu extends SettingsMenu{
             public void valueChanged(ListSelectionEvent arg0) {
                 if (!arg0.getValueIsAdjusting()) {
                     UserSettingsMenu.this.locationDescriptionDialog.updateLocation(locationList.getSelectedValue());
+                    UserSettingsMenu.this.locationDescriptionDialog.updatelikedislikeicons();
                     UserSettingsMenu.this.locationDescriptionDialog.descriptionTextArea.setEditable(false);
                     UserSettingsMenu.this.locationDescriptionDialog.updateLocation.setVisible(false);
+                    UserSettingsMenu.this.locationDescriptionDialog.deleteLocation.setVisible(false);
+                    UserSettingsMenu.this.locationDescriptionDialog.likeButton.setVisible(true);
+                    UserSettingsMenu.this.locationDescriptionDialog.dislikeButton.setVisible(true);
                     UserSettingsMenu.this.locationDescriptionDialog.setVisible(true);
                 }
             }

@@ -16,7 +16,7 @@ public class IconResizer extends Resizer{
         for ( Component child :  container.getComponents () )
         {
             if ( child instanceof CostumButton ){
-               ((CostumButton) child).updateIcon(newIconWidth, newIconHight);
+               ((CostumButton) child).updateIconSize(newIconWidth, newIconHight);
             }
         }
         

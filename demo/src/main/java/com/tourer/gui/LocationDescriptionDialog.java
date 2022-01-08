@@ -1,5 +1,6 @@
 package com.tourer.gui;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -14,7 +15,7 @@ import com.tourer.gui.map.Location;
 import com.tourer.jdbc.Connector;
 
 import javafx.application.Platform;
-import netscape.javascript.JSObject;
+
 
 import java.awt.Window;
 import java.awt.Color;
@@ -33,6 +34,14 @@ public class LocationDescriptionDialog extends JDialog{
     public JTextArea descriptionTextArea;
     public JScrollPane textScrollPane;
     public JButton updateLocation;
+    public JButton deleteLocation;
+    public CostumButton likeButton;
+    public static String username;
+    public CostumButton dislikeButton;
+    public static final String likePath = "Icons\\Like.png";
+    public static final String dislikePath = "Icons\\DisLike.png";
+    public static final String likeSelectedPath = "Icons\\LikeSelected.png";
+    public static final String dislikeSelectedPath = "Icons\\DisLikeSelected.png";
     public LocationDescriptionDialog(Window window){
         super(window);
 
@@ -73,7 +82,7 @@ public class LocationDescriptionDialog extends JDialog{
                     @Override
                     public void run() {
                         Double lat = location.getLatitude();
-                        Double lng = location.getlongitude();
+                        Double lng = location.getLongitude();
                         App.engine.executeScript("setTargetMarker(" + lat + ", " + lng + ");");
                         App.mainFrame.requestFocus();
                     }
@@ -98,7 +107,7 @@ public class LocationDescriptionDialog extends JDialog{
                 int result = JOptionPane.showConfirmDialog(LocationDescriptionDialog.this, message, "Save changes", JOptionPane.OK_CANCEL_OPTION);
 
                 if(result == JOptionPane.OK_OPTION){
-                    if(Connector.modifyLocation( location.getLatitude(), location.getlongitude(), nameTextField.getText(), descriptionTextArea.getText()) == false){
+                    if(Connector.modifyLocation( location.getLatitude(), location.getLongitude(), nameTextField.getText(), descriptionTextArea.getText()) == false){
                         JOptionPane.showMessageDialog(UsserButton.userSettingsMenu, "Failed to update location", "ERROR", JOptionPane.ERROR_MESSAGE);
                     }
                     else
@@ -121,10 +130,125 @@ public class LocationDescriptionDialog extends JDialog{
         
 
         updateLocation.setVisible(false);
-
+        
 
         this.add(updateLocation);
+
+        deleteLocation = new JButton("Delete location");
+        deleteLocation.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int rez = JOptionPane.showConfirmDialog(LocationDescriptionDialog.this, "Do you really want to delete this location?", "", JOptionPane.YES_NO_OPTION);
+
+                if(rez == JOptionPane.OK_OPTION){
+                    try {
+                        Connector.deleteLocation(location.getName());
+                        UsserButton.userSettingsMenu.setVisible(false);
+                        try {
+                            UsserButton.userSettingsMenu.updateVisited();
+                        } catch (SQLException e2) {
+                            // TODO Auto-generated catch block
+                            e2.printStackTrace();
+                        }
+                        UsserButton.userSettingsMenu.setVisible(true);
+                        LocationDescriptionDialog.this.setVisible(false);
+                    } catch (SQLException e1) {
+                        JOptionPane.showMessageDialog(UsserButton.userSettingsMenu, "Failed to delete location", "ERROR", JOptionPane.ERROR_MESSAGE);
+                        e1.printStackTrace();
+                    }
+                }
+                
+            }
+
+        });
+
+        deleteLocation.setVisible(false);
+        this.add(deleteLocation);
         
+        
+        likeButton = new CostumButton(80, 80, likePath);
+       
+       
+        
+        likeButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String name = location.getName();
+                int like = location.getLikes();
+                try {
+                    Connector.modifylikeState(name, username, true);
+                    if(location.getUserlikes().contains(Connector.USERNAME) == false)
+                    {
+                        like++;
+                        likeButton.updateIcon(likeSelectedPath);
+                        location.getUserlikes().add(Connector.USERNAME);
+                    }
+                    else
+                    {
+                        like--;
+                        likeButton.updateIcon(likePath);
+                        location.getUserlikes().remove(Connector.USERNAME);
+    
+                    }
+                    
+                    Connector.like(name, username, like);
+                    
+                    location.setLikes(like);
+                } catch (SQLException e1) {
+                    JOptionPane.showMessageDialog(App.accountCreationFrame, Connector.ERROR_LIKE_UPDATE, "ERROR", JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace();
+                }
+
+               
+                
+            }
+
+        });
+        likeButton.setVisible(false);
+        
+        dislikeButton = new CostumButton(80, 80, dislikePath);
+        
+        
+        dislikeButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // TODO Auto-generated method stub
+                String name = location.getName();
+                int dislikes = location.getLikes();
+                try {
+                    Connector.modifylikeState(name, username, false);
+                    if(location.getUserdislikes().contains(Connector.USERNAME) == false)
+                    {
+                        dislikes++;
+                        dislikeButton.updateIcon(dislikeSelectedPath);
+                        location.getUserdislikes().add(Connector.USERNAME);
+                    }
+                    else
+                    {
+                        dislikes--;
+                        dislikeButton.updateIcon(dislikePath);
+                        location.getUserdislikes().remove(Connector.USERNAME);
+    
+                    }
+                    
+                    Connector.dislike(name, username, dislikes);
+                    location.setDislikes(dislikes);
+                } catch (SQLException e1) {
+                    JOptionPane.showMessageDialog(App.accountCreationFrame, Connector.ERROR_LIKE_UPDATE, "ERROR", JOptionPane.ERROR_MESSAGE);
+                    e1.printStackTrace();
+                }
+
+               
+                
+            }
+
+        });
+        dislikeButton.setVisible(false);
+        this.add(likeButton);
+        this.add(dislikeButton);
     }
 
     public void updateLocation(Location location){
@@ -132,5 +256,23 @@ public class LocationDescriptionDialog extends JDialog{
         this.descriptionTextArea.setText(location.getDescription());
         this.setTitle(location.getName());
 
+    }
+
+    public void updatelikedislikeicons(){
+        if(location.getUserlikes().contains(Connector.USERNAME) == false){
+            likeButton.updateIcon(likePath);
+        }
+        else
+        {
+            likeButton.updateIcon(likeSelectedPath);
+        }
+
+        if(location.getUserdislikes().contains(Connector.USERNAME) == false){
+            dislikeButton.updateIcon(dislikePath);
+        }
+        else
+        {
+            dislikeButton.updateIcon(dislikeSelectedPath);
+        }
     }
 }

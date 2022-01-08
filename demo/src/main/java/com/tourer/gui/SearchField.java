@@ -16,7 +16,11 @@ import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
+import com.tourer.App;
+import com.tourer.gui.map.Location;
 import com.tourer.jdbc.*;
+
+import javafx.application.Platform;
 
 public class SearchField extends JComboBox<String>{
     
@@ -117,12 +121,30 @@ public class SearchField extends JComboBox<String>{
                                 
                             } catch (SQLException e) {
                                 JOptionPane.showMessageDialog(UsserButton.userSettingsMenu, "Couldn't load user: " +  SearchField.super.getSelectedItem() , "ERROR", JOptionPane.ERROR_MESSAGE);
-                                
+                                e.printStackTrace();
                             }
                         }
                         else
                         if(SearchField.this instanceof LocationSearchField){
                             //System.out.print("selected2");
+                            String locationName = (String) SearchField.super.getSelectedItem();
+                            try {
+                                Location searchedLocation = Connector.getFirstLocationByName(locationName);
+                                Platform.runLater(new Runnable() {
+
+                                    @Override
+                                    public void run() {
+                                        Double lat = searchedLocation.getLatitude();
+                                        Double lng = searchedLocation.getLongitude();
+                                        App.engine.executeScript("setTargetMarker(" + lat + ", " + lng + ");");
+                                        App.mainFrame.requestFocus();
+                                    }
+                                });
+                            } catch (SQLException e) {
+                                JOptionPane.showMessageDialog(UsserButton.userSettingsMenu, "Failed to mark location" , "ERROR", JOptionPane.ERROR_MESSAGE);
+                                e.printStackTrace();
+                            }
+                           
                         }
                 }
             }

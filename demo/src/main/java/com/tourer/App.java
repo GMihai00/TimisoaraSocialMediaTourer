@@ -66,7 +66,9 @@ public class App extends Application
     public static GradientColor gradientColor = new GradientColor(new Color(38, 0, 110), AppSettingsMenu.PURPLE_COLOR);
     static String logoPath = "C:\\Java\\PI\\demo\\Icons\\Logo.jpg";
     static String errorPath = "C:\\Java\\PI\\demo\\Icons\\Error.png";
+    static String questionPath = "C:\\Java\\PI\\demo\\Icons\\Question.png";
     static final ImageIcon errorIcon = new ImageIcon(new ImageIcon(errorPath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+    static final ImageIcon questionIcon = new ImageIcon(new ImageIcon(questionPath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
     public static WebEngine engine;
     public static WebView view;
     public static MainFrame mainFrame = new MainFrame(gradientColor);
@@ -76,6 +78,7 @@ public class App extends Application
     static{
         mainFrame.setVisible(false);
         UIManager.put("OptionPane.errorIcon", errorIcon);
+        UIManager.put("OptionPane.questionIcon", questionIcon);
         UIManager.put("OptionPane.background", gradientColor.getSecondaryColor());
         UIManager.put("Panel.background", gradientColor.getSecondaryColor());
         UIManager.put("Button.background", Color.orange);
@@ -159,12 +162,13 @@ public class App extends Application
                         ColorPanel searchPanel = new ColorPanel();
                         searchPanel.setLayout(new CardLayout());
                         LocationSearchField locationSearchField = new LocationSearchField();
-                        searchPanel.add(locationSearchField);
+                        
                         UserSearchField userSearchField = new UserSearchField();
                         
                         searchPanel.setSize(new Dimension(MainFrame.screenSize.width, 50));
+                        
                         searchPanel.add(userSearchField);
-
+                        searchPanel.add(locationSearchField);
                         buttonBox = new ButtonBox(locationSearchField, userSearchField);
                         
                         
@@ -203,7 +207,7 @@ public class App extends Application
                     
                     for(int i = 0; i < min(10, vLocation.size()); i++){
                         Double lat = vLocation.get(i).getLatitude();
-                        Double lng = vLocation.get(i).getlongitude();
+                        Double lng = vLocation.get(i).getLongitude();
                         
                         engine.executeScript("addMarkerToList(" + lat + ", " + lng + ");");
                     }
