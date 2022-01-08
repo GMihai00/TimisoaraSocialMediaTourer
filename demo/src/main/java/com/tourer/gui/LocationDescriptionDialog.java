@@ -1,6 +1,7 @@
 package com.tourer.gui;
 
 import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -9,6 +10,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SpringLayout;
 
 import com.tourer.App;
 import com.tourer.gui.map.Location;
@@ -42,6 +44,9 @@ public class LocationDescriptionDialog extends JDialog{
     public static final String dislikePath = "Icons\\DisLike.png";
     public static final String likeSelectedPath = "Icons\\LikeSelected.png";
     public static final String dislikeSelectedPath = "Icons\\DisLikeSelected.png";
+    public static final Integer SPACER_SIZE = 10;
+    public JLabel likeCount;
+    public JLabel dislikeCount;
     public LocationDescriptionDialog(Window window){
         super(window);
 
@@ -49,7 +54,11 @@ public class LocationDescriptionDialog extends JDialog{
         this.setPreferredSize(DIALOG_SIZE);
         this.setResizable(false);
         this.setVisible(false);
+        
         contentPane = new ColorPanel();
+        SpringLayout springLayout = new SpringLayout();
+        contentPane.setLayout(springLayout);
+        contentPane.setPreferredSize(new Dimension(this.getWidth() - 100,this.getHeight() * 2 ));
         this.setContentPane(contentPane);
         this.setLocationRelativeTo(null);
         JLabel description = new JLabel("Description");
@@ -57,6 +66,8 @@ public class LocationDescriptionDialog extends JDialog{
         description.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         
         this.add(description);
+        springLayout.putConstraint(SpringLayout.NORTH, description, SPACER_SIZE, SpringLayout.NORTH, contentPane);
+        springLayout.putConstraint(SpringLayout.WEST, description, SPACER_SIZE, SpringLayout.WEST, contentPane);
         descriptionTextArea = new JTextArea("");
         descriptionTextArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 30));
         descriptionTextArea.setEditable(false);
@@ -71,8 +82,13 @@ public class LocationDescriptionDialog extends JDialog{
         textScrollPane.setPreferredSize(TEXTAREA_SIZE);
         
         this.add(textScrollPane);
-
+        springLayout.putConstraint(SpringLayout.NORTH, textScrollPane, SPACER_SIZE, SpringLayout.SOUTH, description);
+        springLayout.putConstraint(SpringLayout.WEST, textScrollPane, SPACER_SIZE, SpringLayout.WEST, contentPane);
+        springLayout.putConstraint(SpringLayout.EAST, textScrollPane, -SPACER_SIZE, SpringLayout.EAST, contentPane);
         JButton showOnMapButton = new JButton("Show on Map");
+        Font buttonTextFont = new Font("Serif", Font.BOLD, 18);
+        showOnMapButton.setFont(buttonTextFont);
+        showOnMapButton.setPreferredSize(new Dimension(this.getWidth() - 50, 40));
         showOnMapButton.addActionListener(new ActionListener(){
 
             @Override
@@ -93,7 +109,11 @@ public class LocationDescriptionDialog extends JDialog{
         });
         //setTargetMarker
         this.add(showOnMapButton);
+        springLayout.putConstraint(SpringLayout.NORTH, showOnMapButton, SPACER_SIZE, SpringLayout.SOUTH, textScrollPane);
+        springLayout.putConstraint(SpringLayout.WEST, showOnMapButton, SPACER_SIZE, SpringLayout.WEST, contentPane);
         updateLocation = new JButton("Update location");
+        updateLocation.setFont(buttonTextFont);
+        updateLocation.setPreferredSize(new Dimension(this.getWidth() - 50, 40));
         updateLocation.addActionListener(new ActionListener(){
 
             @Override
@@ -133,8 +153,12 @@ public class LocationDescriptionDialog extends JDialog{
         
 
         this.add(updateLocation);
-
+        
+        springLayout.putConstraint(SpringLayout.NORTH, updateLocation, SPACER_SIZE, SpringLayout.SOUTH, showOnMapButton);
+        springLayout.putConstraint(SpringLayout.WEST, updateLocation, SPACER_SIZE, SpringLayout.WEST, contentPane);
         deleteLocation = new JButton("Delete location");
+        deleteLocation.setFont(buttonTextFont);
+        deleteLocation.setPreferredSize(new Dimension(this.getWidth() - 50, 40));
         deleteLocation.addActionListener(new ActionListener(){
 
             @Override
@@ -166,7 +190,8 @@ public class LocationDescriptionDialog extends JDialog{
         deleteLocation.setVisible(false);
         this.add(deleteLocation);
         
-        
+        springLayout.putConstraint(SpringLayout.NORTH, deleteLocation, SPACER_SIZE, SpringLayout.SOUTH, updateLocation);
+        springLayout.putConstraint(SpringLayout.WEST, deleteLocation, SPACER_SIZE, SpringLayout.WEST, contentPane);
         likeButton = new CostumButton(80, 80, likePath);
        
        
@@ -196,6 +221,7 @@ public class LocationDescriptionDialog extends JDialog{
                     Connector.like(name, username, like);
                     
                     location.setLikes(like);
+                    LocationDescriptionDialog.this.likeCount.setText("" + location.getLikes());
                 } catch (SQLException e1) {
                     JOptionPane.showMessageDialog(App.accountCreationFrame, Connector.ERROR_LIKE_UPDATE, "ERROR", JOptionPane.ERROR_MESSAGE);
                     e1.printStackTrace();
@@ -217,7 +243,7 @@ public class LocationDescriptionDialog extends JDialog{
             public void actionPerformed(ActionEvent e) {
                 // TODO Auto-generated method stub
                 String name = location.getName();
-                int dislikes = location.getLikes();
+                int dislikes = location.getDislikes();
                 try {
                     Connector.modifylikeState(name, username, false);
                     if(location.getUserdislikes().contains(Connector.USERNAME) == false)
@@ -236,6 +262,8 @@ public class LocationDescriptionDialog extends JDialog{
                     
                     Connector.dislike(name, username, dislikes);
                     location.setDislikes(dislikes);
+                   
+                    LocationDescriptionDialog.this.dislikeCount.setText("" + location.getDislikes());
                 } catch (SQLException e1) {
                     JOptionPane.showMessageDialog(App.accountCreationFrame, Connector.ERROR_LIKE_UPDATE, "ERROR", JOptionPane.ERROR_MESSAGE);
                     e1.printStackTrace();
@@ -249,13 +277,34 @@ public class LocationDescriptionDialog extends JDialog{
         dislikeButton.setVisible(false);
         this.add(likeButton);
         this.add(dislikeButton);
+        springLayout.putConstraint(SpringLayout.NORTH, likeButton, SPACER_SIZE, SpringLayout.SOUTH, showOnMapButton);
+        springLayout.putConstraint(SpringLayout.NORTH, dislikeButton, SPACER_SIZE + 25, SpringLayout.SOUTH, showOnMapButton);
+        springLayout.putConstraint(SpringLayout.WEST, likeButton, this.getWidth() / 3 + 40, SpringLayout.WEST, contentPane);
+        springLayout.putConstraint(SpringLayout.WEST, dislikeButton, 0, SpringLayout.EAST, likeButton);
+        
+        likeCount = new JLabel("-");
+        likeCount.setForeground(Color.orange);
+        likeCount.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
+        dislikeCount = new JLabel("-");
+        dislikeCount.setForeground(Color.orange);
+        dislikeCount.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
+        this.add(likeCount);
+        this.add(dislikeCount);
+        springLayout.putConstraint(SpringLayout.NORTH, likeCount, SPACER_SIZE, SpringLayout.SOUTH, likeButton);
+        springLayout.putConstraint(SpringLayout.NORTH, dislikeCount, SPACER_SIZE, SpringLayout.SOUTH, likeButton);
+        springLayout.putConstraint(SpringLayout.WEST, likeCount, this.getWidth() / 3 + 40 + 70, SpringLayout.WEST, contentPane);
+        springLayout.putConstraint(SpringLayout.WEST, dislikeCount, 80, SpringLayout.EAST, likeCount);
+        JScrollPane scrolableContentPane = new JScrollPane(this.getContentPane());
+        
+        this.setContentPane(scrolableContentPane);
     }
 
     public void updateLocation(Location location){
         this.location = location;
         this.descriptionTextArea.setText(location.getDescription());
         this.setTitle(location.getName());
-
+        this.likeCount.setText("" + location.getLikes());
+        this.dislikeCount.setText("" + location.getDislikes());
     }
 
     public void updatelikedislikeicons(){
