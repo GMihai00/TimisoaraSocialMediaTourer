@@ -1,9 +1,13 @@
 package com.tourer.gui;
 
+import java.awt.Image;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -11,10 +15,14 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpringLayout;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.tourer.App;
 import com.tourer.gui.map.Location;
 import com.tourer.jdbc.Connector;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 
 import javafx.application.Platform;
 
@@ -24,6 +32,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.awt.event.ActionEvent;
 
@@ -32,6 +42,7 @@ public class LocationDescriptionDialog extends JDialog{
     public final static Dimension DIALOG_SIZE = new Dimension((int) MainFrame.screenSize.getWidth() * 2 / 3, (int) MainFrame.screenSize.getHeight() * 2 / 3);
     public final static Dimension TEXTAREA_SIZE = new Dimension((int) MainFrame.screenSize.getWidth() * 2 / 3, ((int) MainFrame.screenSize.getHeight() * 2 / 3) * 2 / 3);
     public ColorPanel contentPane;
+    public ImageIcon locationImage;
     public Location location;
     public JTextArea descriptionTextArea;
     public JScrollPane textScrollPane;
@@ -47,6 +58,11 @@ public class LocationDescriptionDialog extends JDialog{
     public static final Integer SPACER_SIZE = 10;
     public JLabel likeCount;
     public JLabel dislikeCount;
+    public JLabel locationPhoto;
+    public JLabel photo;
+    public JButton addPhotoButton;
+
+    public static final String defaultPhotoPath = "Icons\\DefaultPhoto.jpg";
     public LocationDescriptionDialog(Window window){
         super(window);
 
@@ -58,15 +74,26 @@ public class LocationDescriptionDialog extends JDialog{
         contentPane = new ColorPanel();
         SpringLayout springLayout = new SpringLayout();
         contentPane.setLayout(springLayout);
-        contentPane.setPreferredSize(new Dimension(this.getWidth() - 100,this.getHeight() * 2 ));
+        contentPane.setPreferredSize(new Dimension(this.getWidth() - 100,this.getHeight() * 2 + 100));
         this.setContentPane(contentPane);
         this.setLocationRelativeTo(null);
+
+        photo = new JLabel("_");
+        ImageIcon photoIcon = new ImageIcon(new ImageIcon(defaultPhotoPath).getImage().getScaledInstance(this.getWidth(), 400, Image.SCALE_SMOOTH));
+        photo.setIcon(photoIcon);
+        this.add(photo);
+        springLayout.putConstraint(SpringLayout.NORTH, photo, SPACER_SIZE, SpringLayout.NORTH, contentPane);
+        springLayout.putConstraint(SpringLayout.WEST, photo, SPACER_SIZE, SpringLayout.WEST, contentPane);
+        springLayout.putConstraint(SpringLayout.EAST, photo, -SPACER_SIZE, SpringLayout.EAST, contentPane);
         JLabel description = new JLabel("Description");
         description.setForeground(Color.orange);
         description.setFont(new Font(AppSettingsMenu.fontStyle, AppSettingsMenu.fontType, AppSettingsMenu.textSize));
         
+        locationPhoto = new JLabel();
+        this.add(locationPhoto);
+        locationPhoto.setVisible(false);
         this.add(description);
-        springLayout.putConstraint(SpringLayout.NORTH, description, SPACER_SIZE, SpringLayout.NORTH, contentPane);
+        springLayout.putConstraint(SpringLayout.NORTH, description, SPACER_SIZE, SpringLayout.SOUTH, photo);
         springLayout.putConstraint(SpringLayout.WEST, description, SPACER_SIZE, SpringLayout.WEST, contentPane);
         descriptionTextArea = new JTextArea("");
         descriptionTextArea.setFont(new Font(Font.DIALOG, Font.PLAIN, 30));
@@ -85,8 +112,75 @@ public class LocationDescriptionDialog extends JDialog{
         springLayout.putConstraint(SpringLayout.NORTH, textScrollPane, SPACER_SIZE, SpringLayout.SOUTH, description);
         springLayout.putConstraint(SpringLayout.WEST, textScrollPane, SPACER_SIZE, SpringLayout.WEST, contentPane);
         springLayout.putConstraint(SpringLayout.EAST, textScrollPane, -SPACER_SIZE, SpringLayout.EAST, contentPane);
-        JButton showOnMapButton = new JButton("Show on Map");
+
         Font buttonTextFont = new Font("Serif", Font.BOLD, 18);
+        addPhotoButton = new JButton("Change photo");
+        addPhotoButton.setFont(buttonTextFont);
+        addPhotoButton.setPreferredSize(new Dimension(this.getWidth() - 50, 40));
+        addPhotoButton.addActionListener(new ActionListener(){
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                
+                File photoDir = new File("UserPhotos\\" + Connector.USERNAME);
+                if (!photoDir.exists()){
+                    photoDir.mkdirs();
+                }
+                   
+                JFileChooser chooser = new JFileChooser();
+                FileNameExtensionFilter filter = new FileNameExtensionFilter(
+                    "JPEG file", "jpg", "jpeg", "png", "PNG file");
+                chooser.setFileFilter(filter);
+                int returnVal = chooser.showOpenDialog(UsserButton.userSettingsMenu);
+                String photoname = location.getLongitude() + "---" + location.getLongitude();
+                if(returnVal == JFileChooser.APPROVE_OPTION) {
+                    
+                    String filename = chooser.getSelectedFile().getAbsolutePath();
+                    File source = new File(filename);
+                    String extension = "." + FilenameUtils.getExtension(filename);
+                    File dest = new File("UserPhotos\\" + Connector.USERNAME + "\\" + photoname  + extension);
+
+                    File curpng = new File("UserPhotos\\" + Connector.USERNAME + "\\" + photoname +".png");
+                    if(curpng.exists()){
+                        curpng.delete();
+                    }
+                    File curjpg = new File("UserPhotos\\" + Connector.USERNAME + "\\" + photoname + ".jpg");
+                    if(curjpg.exists()){
+                        curjpg.delete();
+                    }
+                    try {
+                        FileUtils.copyFile(source, dest);
+                        try {
+                            Connector.updatePhoto(location.getName(), dest.getAbsolutePath());
+                            location.setPhoto(dest.getAbsolutePath());
+                            LocationDescriptionDialog.this.setVisible(false);
+                            LocationDescriptionDialog.this.updateLocation(location);
+                            LocationDescriptionDialog.this.setVisible(true);
+                        } catch (SQLException e1) {
+                            
+                            e1.printStackTrace();
+                            JOptionPane.showMessageDialog(App.accountCreationFrame, "Failed to update photo", "ERROR", JOptionPane.ERROR_MESSAGE);
+
+                        }
+                        
+
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+                    
+
+                
+                
+            }
+
+        });
+        this.add(addPhotoButton);
+        addPhotoButton.setVisible(false);
+        springLayout.putConstraint(SpringLayout.NORTH, addPhotoButton , SPACER_SIZE, SpringLayout.SOUTH, textScrollPane);
+        springLayout.putConstraint(SpringLayout.WEST, addPhotoButton , SPACER_SIZE, SpringLayout.WEST, contentPane);
+        
+        JButton showOnMapButton = new JButton("Show on Map");
         showOnMapButton.setFont(buttonTextFont);
         showOnMapButton.setPreferredSize(new Dimension(this.getWidth() - 50, 40));
         showOnMapButton.addActionListener(new ActionListener(){
@@ -109,7 +203,7 @@ public class LocationDescriptionDialog extends JDialog{
         });
         //setTargetMarker
         this.add(showOnMapButton);
-        springLayout.putConstraint(SpringLayout.NORTH, showOnMapButton, SPACER_SIZE, SpringLayout.SOUTH, textScrollPane);
+        springLayout.putConstraint(SpringLayout.NORTH, showOnMapButton, SPACER_SIZE, SpringLayout.SOUTH, addPhotoButton);
         springLayout.putConstraint(SpringLayout.WEST, showOnMapButton, SPACER_SIZE, SpringLayout.WEST, contentPane);
         updateLocation = new JButton("Update location");
         updateLocation.setFont(buttonTextFont);
@@ -227,12 +321,12 @@ public class LocationDescriptionDialog extends JDialog{
                     e1.printStackTrace();
                 }
 
-               
+            
                 
             }
 
         });
-        likeButton.setVisible(false);
+        
         
         dislikeButton = new CostumButton(80, 80, dislikePath);
         
@@ -262,23 +356,23 @@ public class LocationDescriptionDialog extends JDialog{
                     
                     Connector.dislike(name, username, dislikes);
                     location.setDislikes(dislikes);
-                   
+                
                     LocationDescriptionDialog.this.dislikeCount.setText("" + location.getDislikes());
                 } catch (SQLException e1) {
                     JOptionPane.showMessageDialog(App.accountCreationFrame, Connector.ERROR_LIKE_UPDATE, "ERROR", JOptionPane.ERROR_MESSAGE);
                     e1.printStackTrace();
                 }
 
-               
+            
                 
             }
 
         });
-        dislikeButton.setVisible(false);
+        
         this.add(likeButton);
         this.add(dislikeButton);
-        springLayout.putConstraint(SpringLayout.NORTH, likeButton, SPACER_SIZE, SpringLayout.SOUTH, showOnMapButton);
-        springLayout.putConstraint(SpringLayout.NORTH, dislikeButton, SPACER_SIZE + 25, SpringLayout.SOUTH, showOnMapButton);
+        springLayout.putConstraint(SpringLayout.NORTH, likeButton, SPACER_SIZE, SpringLayout.SOUTH, deleteLocation);
+        springLayout.putConstraint(SpringLayout.NORTH, dislikeButton, SPACER_SIZE + 25, SpringLayout.SOUTH, deleteLocation);
         springLayout.putConstraint(SpringLayout.WEST, likeButton, this.getWidth() / 3 + 40, SpringLayout.WEST, contentPane);
         springLayout.putConstraint(SpringLayout.WEST, dislikeButton, 0, SpringLayout.EAST, likeButton);
         
@@ -301,10 +395,24 @@ public class LocationDescriptionDialog extends JDialog{
 
     public void updateLocation(Location location){
         this.location = location;
+        String photoPath = location.getPhoto();
+        if(photoPath.equals("") == false){
+            ImageIcon imageIcon =  new ImageIcon(new ImageIcon(photoPath).getImage().getScaledInstance(this.getWidth(), 400, Image.SCALE_SMOOTH));
+            photo.setIcon(imageIcon);
+            
+        }
+        else
+        {
+            ImageIcon imageIcon =  new ImageIcon(new ImageIcon(defaultPhotoPath).getImage().getScaledInstance(this.getWidth(), 400, Image.SCALE_SMOOTH));
+            photo.setIcon(imageIcon);
+        }
         this.descriptionTextArea.setText(location.getDescription());
         this.setTitle(location.getName());
         this.likeCount.setText("" + location.getLikes());
         this.dislikeCount.setText("" + location.getDislikes());
+        ImageIcon photo = new ImageIcon();
+        this.locationPhoto.setIcon(photo);
+        this.locationPhoto.setVisible(true);
     }
 
     public void updatelikedislikeicons(){

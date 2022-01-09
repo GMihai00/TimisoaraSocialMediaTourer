@@ -189,7 +189,7 @@ public class Connector {
     public static Vector <Location> getVisitedLocations() throws SQLException{
         Vector <Location> locationList = new Vector<Location>(); 
         
-        String query = "SELECT latitude, longitude, description, likes, dislikes, name FROM  Location WHERE id=" + USERID + ";";
+        String query = "SELECT latitude, longitude, description, likes, dislikes, photo, name FROM  Location WHERE id=" + USERID + ";";
 
         ResultSet resultSet = runQuery(query);
         while(resultSet.next()){
@@ -202,7 +202,8 @@ public class Connector {
             int dislikes = resultSet.getInt("dislikes");
             Set <String> userlikes = new TreeSet<>();
             Set <String> userdislikes = new TreeSet<>();
-            locationList.add(new Location(name, description, longitude, latitude, likes, dislikes, "", userlikes, userdislikes));
+            String locationImage = resultSet.getString("photo");
+            locationList.add(new Location(name, description, longitude, latitude, likes, dislikes, locationImage, userlikes, userdislikes));
         }
         resultSet.close();
         return locationList;
@@ -212,7 +213,7 @@ public class Connector {
     public static Vector <Location> getOtherVisitedLocations(String username) throws SQLException{
         Vector <Location> locationList = new Vector<Location>(); 
         
-        String query = "SELECT latitude, longitude, description, likes, dislikes, name FROM  Location WHERE id=( SELECT id FROM UserProfile WHERE username='" + username  +"');";
+        String query = "SELECT latitude, longitude, description, likes, dislikes, photo, name FROM  Location WHERE id=( SELECT id FROM UserProfile WHERE username='" + username  +"');";
         Statement statement2 = connector.createStatement();
         ResultSet resultSet = runQuery(query);
         while(resultSet.next()){
@@ -226,7 +227,7 @@ public class Connector {
             Set <String> userlikes = new TreeSet<>();
             Set <String> userdislikes = new TreeSet<>();
 
-            
+            String locationImage = resultSet.getString("photo");
             String query2 = "SELECT nameother, type from likestate WHERE  id=( SELECT id FROM UserProfile WHERE username='" + username  +"') AND name = '" + name + "';";
             
             ResultSet resultSet2 = statement2.executeQuery(query2);
@@ -242,8 +243,8 @@ public class Connector {
                 
             }
             resultSet2.close();
-           
-            locationList.add(new Location(name, description, longitude, latitude, likes, dislikes, "", userlikes, userdislikes));
+        
+            locationList.add(new Location(name, description, longitude, latitude, likes, dislikes, locationImage, userlikes, userdislikes));
         }
         statement2.close();
         resultSet.close();
@@ -334,5 +335,15 @@ public class Connector {
         }
         resultSet.close();
         runUpdate(query2);
+    }
+    
+    public static void updatePhoto(String name, String newpath) throws SQLException{
+        newpath = newpath.replace("\\", "\\\\");
+        String query = "UPDATE Location SET photo='" + newpath + "' WHERE name='" + name + "' AND id=" + USERID + ";";
+
+        System.out.println(query);
+        runUpdate(query);
+
+
     }
 }

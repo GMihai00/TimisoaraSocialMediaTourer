@@ -258,8 +258,9 @@ public class UserSettingsMenu extends SettingsMenu{
                     UserSettingsMenu.this.locationDescriptionDialog.descriptionTextArea.setEditable(true);
                     UserSettingsMenu.this.locationDescriptionDialog.updateLocation.setVisible(true);
                     UserSettingsMenu.this.locationDescriptionDialog.deleteLocation.setVisible(true);
-                    UserSettingsMenu.this.locationDescriptionDialog.likeButton.setVisible(false);
-                    UserSettingsMenu.this.locationDescriptionDialog.dislikeButton.setVisible(false);
+                    UserSettingsMenu.this.locationDescriptionDialog.likeButton.setEnabled(false);
+                    UserSettingsMenu.this.locationDescriptionDialog.dislikeButton.setEnabled(false);
+                    UserSettingsMenu.this.locationDescriptionDialog.addPhotoButton.setVisible(true);
                     UserSettingsMenu.this.locationDescriptionDialog.setVisible(true);
 
                     
@@ -310,8 +311,9 @@ public class UserSettingsMenu extends SettingsMenu{
                     UserSettingsMenu.this.locationDescriptionDialog.descriptionTextArea.setEditable(false);
                     UserSettingsMenu.this.locationDescriptionDialog.updateLocation.setVisible(false);
                     UserSettingsMenu.this.locationDescriptionDialog.deleteLocation.setVisible(false);
-                    UserSettingsMenu.this.locationDescriptionDialog.likeButton.setVisible(true);
-                    UserSettingsMenu.this.locationDescriptionDialog.dislikeButton.setVisible(true);
+                    UserSettingsMenu.this.locationDescriptionDialog.likeButton.setEnabled(true);
+                    UserSettingsMenu.this.locationDescriptionDialog.dislikeButton.setEnabled(true);
+                    UserSettingsMenu.this.locationDescriptionDialog.addPhotoButton.setVisible(false);
                     UserSettingsMenu.this.locationDescriptionDialog.setVisible(true);
                 }
             }
