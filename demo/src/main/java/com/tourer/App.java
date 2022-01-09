@@ -117,6 +117,7 @@ public class App extends Application
                         mutex.acquire();
                         fxpanel = new JFXPanel();
                         view = new WebView();
+                        
                         engine = view.getEngine();
                         engine.getCreatePopupHandler();
                         engine.setJavaScriptEnabled(true);

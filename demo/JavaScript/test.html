@@ -20,10 +20,12 @@
         var locationlat = 0.0;
         var locationlng = 0.0;
         var map;
-        var curLocation;
+        var curLocation = "Giroc, Strada Frasinusului";
         const timisoara = { lat: 45.75372, lng: 21.22571 };
+        
         function initMap() {
-          
+          var directionsService = new google.maps.DirectionsService();
+          var directionsRenderer = new google.maps.DirectionsRenderer();
             // The location of Timisoara
             
             // The map, centered at Timisoara
@@ -40,8 +42,12 @@
                 streetViewControl: false,
                 mapTypeId: 'hybrid'
             });
+            directionsRenderer.setMap(map);
+           
+
             if(targetmarker != null){
-                addTargetMarker(targetmarker);
+                //addTargetMarker(targetmarker);
+                calcRoute();
                 targetmarker = null;
             }
             for(var i = 0; i < markers.length; i++){
@@ -50,8 +56,11 @@
             }
             markertoremove = null;
             //Add click listener to map
+            
             google.maps.event.addListener(map, 'rightclick', 
             function(event){
+                
+              
                 //add marker to map
                 if(markertoremove != null)
                     markertoremove.setMap(null);
@@ -60,7 +69,31 @@
                 locationlng = event.latLng.lng();
                 addMarker(event.latLng);
             });
-            
+            function calcRoute() {
+              
+              
+              if (navigator.geolocation) {
+                
+                var start = curLocation;
+                var end = targetmarker;
+              
+                      directionsService.route({
+                        origin: start,
+                        destination: end,
+                        travelMode: 'DRIVING'
+                      })
+                      .then((response => {
+                        
+                        directionsRenderer.setDirections(response);
+                      }))
+                      .catch((e) => window.alert("Request failed to " + status));
+              }     
+              
+              
+              
+              
+            }
+
             function addMarker(location){
 
                 var marker = new google.maps.Marker({
@@ -81,12 +114,17 @@
               
             }
             
+            
+           
+            
+            
         }
         function getLocationOfCommit(){
               return {lat: locationlat, lng: locationlng};
               
         }
 
+        
         function resetTargetMarker(){
           targetmarker = null;
           initMap();
@@ -96,6 +134,7 @@
           markertoremove = null;
           targetmarker = {lat : lat, lng : lng};
           initMap();
+          
         }
         
         function addMarkerToList(lat, lng){

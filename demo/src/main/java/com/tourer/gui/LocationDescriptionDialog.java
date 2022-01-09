@@ -180,7 +180,7 @@ public class LocationDescriptionDialog extends JDialog{
         springLayout.putConstraint(SpringLayout.NORTH, addPhotoButton , SPACER_SIZE, SpringLayout.SOUTH, textScrollPane);
         springLayout.putConstraint(SpringLayout.WEST, addPhotoButton , SPACER_SIZE, SpringLayout.WEST, contentPane);
         
-        JButton showOnMapButton = new JButton("Show on Map");
+        JButton showOnMapButton = new JButton("Show on map and get directions");
         showOnMapButton.setFont(buttonTextFont);
         showOnMapButton.setPreferredSize(new Dimension(this.getWidth() - 50, 40));
         showOnMapButton.addActionListener(new ActionListener(){
