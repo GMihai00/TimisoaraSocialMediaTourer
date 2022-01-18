@@ -64,9 +64,9 @@ public class App extends Application
 {
     public static AccountCreationFrame accountCreationFrame;
     public static GradientColor gradientColor = new GradientColor(new Color(38, 0, 110), AppSettingsMenu.PURPLE_COLOR);
-    static String logoPath = "C:\\Java\\PI\\demo\\Icons\\Logo.jpg";
-    static String errorPath = "C:\\Java\\PI\\demo\\Icons\\Error.png";
-    static String questionPath = "C:\\Java\\PI\\demo\\Icons\\Question.png";
+    static String logoPath = "Icons\\Logo.jpg";
+    static String errorPath = "Icons\\Error.png";
+    static String questionPath = "Icons\\Question.png";
     static final ImageIcon errorIcon = new ImageIcon(new ImageIcon(errorPath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
     static final ImageIcon questionIcon = new ImageIcon(new ImageIcon(questionPath).getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH));
     public static WebEngine engine;
@@ -124,7 +124,7 @@ public class App extends Application
                         engine.setUserAgent("Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 Chrome/44.0.2403.155 Safari/537.36");
                         Scene scene = new Scene(view);
                         fxpanel.setScene(scene);
-                        engine.load("file:///C:\\Java\\PI\\demo\\JavaScript\\test.html");
+                        engine.load("file:///C:\\Java\\P3\\demo\\JavaScript\\test.html");
                         
                         fxpanel.revalidate();
                         fxpanel.revalidate();
