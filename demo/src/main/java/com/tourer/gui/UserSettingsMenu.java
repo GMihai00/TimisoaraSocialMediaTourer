@@ -233,6 +233,10 @@ public class UserSettingsMenu extends SettingsMenu{
     }
 
 
+    
+    /** 
+     * @throws SQLException
+     */
     public void updateVisited() throws SQLException{
         owned = true;
         name.setText(Connector.USERNAME);
@@ -281,6 +285,11 @@ public class UserSettingsMenu extends SettingsMenu{
         this.update();
     }
 
+    
+    /** 
+     * @param username
+     * @throws SQLException
+     */
     public void showOtherUser(String username) throws SQLException{
         
         name.setText(username);
@@ -331,6 +340,10 @@ public class UserSettingsMenu extends SettingsMenu{
         this.setVisible(true);
     }
 
+    
+    /** 
+     * @param username
+     */
     public void updateUserProfileImage(String username){
 
             if((new File("UserPhotos\\" + username + "\\Background.jpg")).exists())

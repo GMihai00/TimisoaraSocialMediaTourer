@@ -32,6 +32,13 @@ public class Connector {
     public static Statement statement;
     public static Integer USERID;
     public static String USERNAME;
+    
+    /** 
+     * @param url
+     * @param user
+     * @param password
+     * @throws SQLException
+     */
     public static void Connect(String url, String user, String password) throws SQLException{
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -45,26 +52,52 @@ public class Connector {
         
     }
 
+    
+    /** 
+     * @param query
+     * @throws SQLException
+     */
     public static void runUpdate(String query) throws SQLException{
 
         Connector.statement.executeUpdate(query);
     }
 
+    
+    /** 
+     * @param query
+     * @return ResultSet
+     * @throws SQLException
+     */
     public static ResultSet runQuery(String query) throws SQLException{
 
         ResultSet result = Connector.statement.executeQuery(query);
         return result;
     }
 
+    
+    /** 
+     * @throws SQLException
+     */
     public static void closeStament() throws SQLException{
         Connector.statement.close();
     }
 
+    
+    /** 
+     * @throws SQLException
+     */
     public static void closeConnection() throws SQLException{
         Connector.connector.close();
     }
 
 
+    
+    /** 
+     * @param username
+     * @param password
+     * @return boolean
+     * @throws SQLException
+     */
     public static boolean checkUserExistance(String username, String password) throws SQLException{
         
 
@@ -81,6 +114,13 @@ public class Connector {
         return true;
     }
 
+    
+    /** 
+     * @param username
+     * @param password
+     * @param email
+     * @return boolean
+     */
     public static boolean createUser(String username, String password, String email){
         String query = "INSERT INTO UserProfile (creditcardno, username, password, email) VALUES ('-','" + username + "','" + password + "','" + email  + "');";
         try {
@@ -115,6 +155,12 @@ public class Connector {
         return true;
     }
 
+    
+    /** 
+     * @param username
+     * @return Vector<String>
+     * @throws SQLException
+     */
     public static Vector <String> getUserList(String username) throws SQLException{
         Vector <String> rez = new Vector <String>();
 
@@ -128,12 +174,23 @@ public class Connector {
         return rez;
     }
 
+    
+    /** 
+     * @param name
+     * @throws SQLException
+     */
     public static void deleteLocation(String name) throws SQLException{
         String query = "DELETE from location where id =" + Connector.USERID + " and name = '" + name + "';";
         PreparedStatement statement = Connector.connector.prepareStatement(query);
         statement.executeUpdate(); 
     }
 
+    
+    /** 
+     * @param name
+     * @return Vector<String>
+     * @throws SQLException
+     */
     public static Vector <String> getLocationList(String name) throws SQLException{
         Vector <String> rez = new Vector <String>();
 
@@ -147,6 +204,15 @@ public class Connector {
         return rez;
     }
 
+    
+    /** 
+     * @param latitude
+     * @param longitude
+     * @param name
+     * @param description
+     * @return boolean
+     * @throws SQLException
+     */
     public static boolean createLocation(double latitude, double longitude, String name, String description) throws SQLException{
         String query = "INSERT INTO Location(id, latitude, longitude, description, name) VALUES (" + Connector.USERID + "," + latitude + "," + longitude + ",'" + description + "','" + name  + "');";
 
@@ -172,6 +238,14 @@ public class Connector {
         return true;
     }
 
+    
+    /** 
+     * @param latitude
+     * @param longitude
+     * @param name
+     * @param description
+     * @return boolean
+     */
     public static boolean modifyLocation(double latitude, double longitude, String name, String description){
         String query = "UPDATE Location SET name='" + name + "', description='" + description  +"' WHERE id="+ Connector.USERID +" AND latitude="+ latitude +" AND longitude="+ longitude +";";
 
@@ -186,6 +260,11 @@ public class Connector {
         return true;
     }
 
+    
+    /** 
+     * @return Vector<Location>
+     * @throws SQLException
+     */
     public static Vector <Location> getVisitedLocations() throws SQLException{
         Vector <Location> locationList = new Vector<Location>(); 
         
@@ -210,6 +289,12 @@ public class Connector {
         
     }
 
+    
+    /** 
+     * @param username
+     * @return Vector<Location>
+     * @throws SQLException
+     */
     public static Vector <Location> getOtherVisitedLocations(String username) throws SQLException{
         Vector <Location> locationList = new Vector<Location>(); 
         
@@ -251,6 +336,13 @@ public class Connector {
         return locationList;
         
     }
+    
+    /** 
+     * @param cardType
+     * @param cardNumber
+     * @param expriationDate
+     * @param securityCode
+     */
     public static void insertCardData(String cardType, String cardNumber, String expriationDate, String securityCode){
         String query = "INSERT INTO CreditCard(id, type, number, securityCode, expirationDate) VALUES(" + USERID + ",'" + cardType + "'," + cardNumber + "," + securityCode + ",STR_TO_DATE('01/" + expriationDate + "', '%d/%m/%Y')" + ");";
        
@@ -263,6 +355,13 @@ public class Connector {
 
     }
 
+    
+    /** 
+     * @param cardType
+     * @param cardNumber
+     * @param expriationDate
+     * @param securityCode
+     */
     public static void updateCardData(String cardType, String cardNumber, String expriationDate, String securityCode){
         String query = "UPDATE CreditCard SET type='" + cardType + "',number=" + cardNumber + ",expirationDate=STR_TO_DATE('01/" + expriationDate + "', '%d/%m/%Y')" + ",securityCode=" + securityCode + " WHERE id=" + USERID + ";";
        
@@ -275,6 +374,12 @@ public class Connector {
     }
 
 
+    
+    /** 
+     * @param name
+     * @param username
+     * @param like
+     */
     public static void  like(String name, String username, int like){
         String query = "UPDATE Location SET likes=" + like +  " WHERE id=( SELECT id FROM UserProfile WHERE username='" + username +  "') AND name = '" + name +  "';";
         try {
@@ -285,6 +390,12 @@ public class Connector {
         }
     }   
 
+    
+    /** 
+     * @param name
+     * @param username
+     * @param dislike
+     */
     public static void dislike(String name, String username, int dislike){
         
         String query = "UPDATE Location SET dislikes=" + dislike +  " WHERE id=( SELECT id FROM UserProfile WHERE username='" + username + "') AND name = '" + name +  "';";
@@ -296,6 +407,12 @@ public class Connector {
         }
     }
 
+    
+    /** 
+     * @param namelocation
+     * @return Location
+     * @throws SQLException
+     */
     public static Location getFirstLocationByName(String namelocation) throws SQLException{
         Location location = new Location();
         String query = "SELECT latitude, longitude, description, likes, dislikes, name FROM  Location WHERE name='" + namelocation  +"' LIMIT 1;";
@@ -318,6 +435,13 @@ public class Connector {
         
     }
 
+    
+    /** 
+     * @param name
+     * @param username
+     * @param type
+     * @throws SQLException
+     */
     public static void modifylikeState(String name, String username, boolean type) throws SQLException{
         
         String query = "SELECT * FROM likestate WHERE nameother = '" + USERNAME + "' AND type = " + type + " AND name = '" + name + "' AND id = ( SELECT id FROM UserProfile WHERE username='" + username +  "');";
@@ -337,6 +461,12 @@ public class Connector {
         runUpdate(query2);
     }
     
+    
+    /** 
+     * @param name
+     * @param newpath
+     * @throws SQLException
+     */
     public static void updatePhoto(String name, String newpath) throws SQLException{
         newpath = newpath.replace("\\", "\\\\");
         String query = "UPDATE Location SET photo='" + newpath + "' WHERE name='" + name + "' AND id=" + USERID + ";";

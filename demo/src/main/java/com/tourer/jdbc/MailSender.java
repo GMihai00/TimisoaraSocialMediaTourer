@@ -34,11 +34,21 @@ public class MailSender {
             } 
      });
     }
+    
+    /** 
+     * @param recipient
+     * @throws MessagingException
+     */
     public static void sendEmail(String recipient) throws MessagingException{
        
         Message message = createMessage(recipient);
         Transport.send(message);
     }
+    
+    /** 
+     * @param recipient
+     * @return Message
+     */
     private static Message createMessage(String recipient) {
        
         try {

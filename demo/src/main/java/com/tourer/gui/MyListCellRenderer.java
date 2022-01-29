@@ -17,6 +17,15 @@ public class MyListCellRenderer implements ListCellRenderer{
     Border lineBorder = BorderFactory.createLineBorder(Color.BLACK, 4, true);
     Border emptyBorder = BorderFactory.createEmptyBorder(2, 2, 2, 2);
 
+    
+    /** 
+     * @param jList
+     * @param value
+     * @param index
+     * @param isSelected
+     * @param cellHasFocus
+     * @return Component
+     */
     @Override
     public Component getListCellRendererComponent(JList jList, Object value, 
             int index, boolean isSelected, boolean cellHasFocus) {

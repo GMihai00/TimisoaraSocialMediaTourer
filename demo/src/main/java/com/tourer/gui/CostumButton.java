@@ -36,10 +36,19 @@ public class CostumButton extends JButton{
         });
     }
 
+    
+    /** 
+     * @param w
+     * @param h
+     */
     public void updateIconSize(int w, int h){
         ImageIcon icon = new ImageIcon(new ImageIcon(iconPath).getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH));
         this.setIcon(icon);
     }
+    
+    /** 
+     * @param path
+     */
     public void updateIcon(String path){
         icon = new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(w, h, Image.SCALE_SMOOTH));
         selectIcon = new ImageIcon(new ImageIcon(path).getImage().getScaledInstance(w + 20, h + 20, Image.SCALE_SMOOTH));

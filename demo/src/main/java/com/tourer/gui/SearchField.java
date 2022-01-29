@@ -151,12 +151,23 @@ public class SearchField extends JComboBox<String>{
         });
         this.setModel(new DefaultComboBoxModel<String>(latestSearches), "");
     }
+    
+    /** 
+     * @param mdl
+     * @param str
+     */
     private void setModel(DefaultComboBoxModel<String> mdl, String str){
         SearchField.super.setModel(mdl);
         SearchField.super.setSelectedIndex(-1);
         SearchField.this.search.setText(str);
     }
 
+    
+    /** 
+     * @param list
+     * @param text
+     * @return DefaultComboBoxModel<String>
+     */
     private  DefaultComboBoxModel<String> getSuggestedModel(Vector <String> list, String text){
         DefaultComboBoxModel<String> m = new DefaultComboBoxModel<String>();
         for(String s : list){
@@ -166,6 +177,10 @@ public class SearchField extends JComboBox<String>{
         return m;
     }
 
+    
+    /** 
+     * @return Dimension
+     */
     @Override
     public Dimension getMaximumSize() {
         Dimension dim = super.getMaximumSize();
@@ -174,6 +189,10 @@ public class SearchField extends JComboBox<String>{
         return dim;
     }
 
+    
+    /** 
+     * @param item
+     */
     @Override
     public void addItem(String item){
         latestSearches.add(item);

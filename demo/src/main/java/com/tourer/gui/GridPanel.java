@@ -26,13 +26,25 @@ public class GridPanel extends ColorPanel{
         this.setLayout(new GridBagLayout());
     }
 
+    
+    /** 
+     * @param c
+     */
     public void addLeft(Component c){
         this.add(c, left);
     }
 
+    
+    /** 
+     * @param c
+     */
     public void addRight(Component c){
         this.add(c, right);
     }
+    
+    /** 
+     * @param c
+     */
     public void addSpacer(Component c){
         this.addLeft(c);
         this.addRight(c);

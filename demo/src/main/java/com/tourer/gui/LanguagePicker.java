@@ -41,6 +41,12 @@ public class LanguagePicker extends SearchField{
         }
 
     }
+    
+    /** 
+     * @param text
+     * @param language
+     * @return String
+     */
     public static String getTranslatedVersion(String text, String language){
         
         if(language == null)
@@ -63,6 +69,11 @@ public class LanguagePicker extends SearchField{
         }
     }
 
+    
+    /** 
+     * @param component
+     * @param language
+     */
     public static void updateLanguage ( Component component, String language)
     {
         if(component instanceof JComponent){

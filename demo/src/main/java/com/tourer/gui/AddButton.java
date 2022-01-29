@@ -85,6 +85,11 @@ public class AddButton extends CostumButton{
         
     }
     
+    
+    /** 
+     * @param newLatitude
+     * @param newLongitude
+     */
     public static void updateLocation(Double newLatitude, Double newLongitude){
         latitude = newLatitude;
         longitude = newLongitude;

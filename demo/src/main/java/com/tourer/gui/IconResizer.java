@@ -9,6 +9,12 @@ import com.tourer.App;
 
 public class IconResizer extends Resizer{
     
+    
+    /** 
+     * @param container
+     * @param newIconHight
+     * @param newIconWidth
+     */
     public static void changeIconSize ( Container container, int newIconHight, int newIconWidth)
     {
         

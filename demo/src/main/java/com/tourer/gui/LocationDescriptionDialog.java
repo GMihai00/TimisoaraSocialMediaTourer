@@ -393,6 +393,10 @@ public class LocationDescriptionDialog extends JDialog{
         this.setContentPane(scrolableContentPane);
     }
 
+    
+    /** 
+     * @param location
+     */
     public void updateLocation(Location location){
         this.location = location;
         String photoPath = location.getPhoto();

@@ -10,6 +10,11 @@ import javax.swing.event.ChangeListener;
 
 public class TextResizer extends Resizer{
  
+    
+    /** 
+     * @param component
+     * @param font
+     */
     public static void changeFont ( Component component, Font font )
     {
         component.setFont ( font );

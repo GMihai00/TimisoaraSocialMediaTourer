@@ -25,6 +25,10 @@ public class MySliderUI extends BasicSliderUI {
         super(slider);
     }
 
+    
+    /** 
+     * @return boolean
+     */
     private boolean isHorizontal() {
         return slider.getOrientation() == JSlider.HORIZONTAL;
     }
@@ -51,6 +55,10 @@ public class MySliderUI extends BasicSliderUI {
         }
     }
 
+    
+    /** 
+     * @param g
+     */
     @Override
         public void paintTrack(final Graphics g) {
             Graphics2D g2 = (Graphics2D) g;

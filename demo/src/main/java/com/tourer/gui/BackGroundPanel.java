@@ -12,15 +12,27 @@ public class BackGroundPanel extends JPanel{
         this.img = img;
     }
 
+    
+    /** 
+     * @return Image
+     */
     public Image getImg() {
         return this.img;
     }
 
+    
+    /** 
+     * @param img
+     */
     public void setImg(Image img) {
         this.img = img;
     }
 
 
+    
+    /** 
+     * @param g
+     */
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);

@@ -28,6 +28,10 @@ public class ColorPanel extends JPanel{
         this.setBorder(BorderFactory.createLineBorder(Color.black));
     }
 
+    
+    /** 
+     * @param g
+     */
     @Override
     protected void paintComponent(Graphics g){
         super.paintComponent(g);

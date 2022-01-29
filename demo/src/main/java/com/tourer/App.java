@@ -86,6 +86,12 @@ public class App extends Application
         UIManager.put("OptionPane.messageForeground", Color.orange);
     }
 
+    
+    /** 
+     * @param username
+     * @param password
+     * @return boolean
+     */
     public static boolean checkUserExistance(String username, String password){
 
         
@@ -225,12 +231,23 @@ public class App extends Application
         
        
     }
+    
+    /** 
+     * @param i
+     * @param j
+     * @return int
+     */
     private static int min(int i, int j) {
         if(i < j)
             return i;
         else
             return j;
     }
+    
+    /** 
+     * @param args
+     * @throws IOException
+     */
     public static void main( String[] args ) throws IOException{
         
         try{
@@ -387,6 +404,11 @@ public class App extends Application
 
     }
 
+    
+    /** 
+     * @param primaryStage
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception {
         initAndShowGUI();
@@ -400,6 +422,10 @@ public class App extends Application
         currentLongitude =((Double) location.getMember("lng"));
         System.out.println(currentLatitude + " " + currentLongitude);
     }
+    
+    /** 
+     * @param runnable
+     */
     public static void runAndWait(Runnable runnable) {
         try {/* ww  w . j a v a  2s .  c  o m*/
             if (Platform.isFxApplicationThread()) {
